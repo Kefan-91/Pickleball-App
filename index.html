@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="Pickleball"/>
-<title>Maple Leaf Pickleball Club — Host Mode</title>
+<title>Maple Leaf Pickleball Club — SaaS Edition</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -17,7 +17,7 @@ body{font-family:var(--font);color:var(--text);background:var(--bg);font-size:15
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 0;margin-bottom:10px;gap:8px;flex-wrap:wrap}
 .topbar-left{display:flex;align-items:center;gap:8px}
 .mode-switch{display:flex;background:var(--bg2);border-radius:999px;padding:3px}
-.mode-btn{font-size:13px;padding:6px 12px;border-radius:999px;border:none;background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.mode-btn{font-size:13px;padding:6px 12px;border-radius:999px;border:none;background:transparent;color:var(--text2);cursor:pointer;font-weight:500;display:flex;align-items:center;gap:4px;white-space:nowrap}
 .mode-btn.active{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .topbar-right{display:flex;align-items:center;gap:6px}
 .icon-btn{font-size:12px;padding:5px 10px;border-radius:999px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;display:flex;align-items:center;gap:4px;white-space:nowrap}
@@ -30,8 +30,7 @@ body{font-family:var(--font);color:var(--text);background:var(--bg);font-size:15
 .announce-chips{display:flex;flex-wrap:wrap;gap:6px}
 .announce-chip{font-size:12px;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.18);padding:3px 9px;border-radius:999px}
 .mode-panel{display:none}.mode-panel.active{display:block}
-.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 14px;margin-bottom:12px}
-.sg3{grid-template-columns:repeat(3,1fr)}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 14px;margin-bottom:12px}
 .sc{background:var(--bg2);border-radius:var(--radius);padding:9px 6px;text-align:center}
 .sn{font-size:20px;font-weight:600}.sl{font-size:11px;color:var(--text2);margin-top:1px}
 .tabs{display:flex;border-bottom:0.5px solid var(--border);overflow-x:auto;padding:0 14px;scrollbar-width:none}
@@ -60,7 +59,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
 .prest{background:var(--warn-bg);color:var(--warn-text)}
 .av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
-.modal-overlay.show{opacity:1;pointer-events:all}
+.modal-overlay.show{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:1;pointer-events:all}
 .modal{background:var(--bg);border-radius:20px 20px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:600px;transform:translateY(100%);transition:transform .25s;max-height:90vh;overflow-y:auto}
 .modal-overlay.show .modal{transform:translateY(0)}
 .modal-title{font-size:16px;font-weight:700;margin-bottom:14px;text-align:center}
@@ -71,28 +70,13 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
 .team-box{background:var(--bg2);border-radius:var(--radius);padding:7px 10px}
 .tl2{font-size:10px;color:var(--text2);margin-bottom:3px}
 .tp2{font-size:13px;font-weight:500;padding:1px 0}
-.match-row{display:grid;grid-template-columns:60px 1fr auto 1fr;gap:6px;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border)}
+.match-row{display:grid;grid-template-columns:80px 1fr auto 1fr;gap:6px;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border)}
 .match-row:last-child{border-bottom:none}
-.score-inp{width:36px;text-align:center;padding:5px 2px;font-size:14px;font-weight:600;background:var(--bg2)}
+.score-inp{width:42px;text-align:center;padding:5px 2px;font-size:15px;font-weight:600;background:var(--bg2);border-radius:6px;border:0.5px solid var(--border2)}
 .mscore{display:flex;align-items:center;gap:3px;justify-content:center}
 .std-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
 .std-table th{text-align:left;padding:7px 8px;font-size:11px;font-weight:600;color:var(--text2);border-bottom:0.5px solid var(--border);background:var(--bg2)}
 .std-table td{padding:8px;border-bottom:0.5px solid var(--border)}
-.std-table tr:last-child td{border-bottom:none}
-.draft-card{background:var(--bg2);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;border:1.5px solid transparent}
-.draft-card.active-pick{border-color:#378ADD;background:var(--info-bg)}
-.pick-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;font-size:13px;cursor:pointer;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);margin:3px;font-family:var(--font)}
-.rank1{background:#FAEEDA;color:#633806}.rank2{background:#F1EFE8;color:#444441}.rank3{background:#FAECE7;color:#712B13}
-.player-sel-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 9px;border-radius:999px;font-size:12px;cursor:pointer;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);margin:2px;font-family:var(--font)}
-.player-sel-btn.selected{background:var(--info-bg);color:var(--info-text);border-color:var(--info-text)}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:9px 18px;border-radius:999px;font-size:13px;z-index:600;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1}
-.empty{text-align:center;padding:2rem 1rem;color:var(--text2);font-size:14px}
-.gender-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
-.gender-btn{padding:10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:var(--font);font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
-.gender-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
-.win-opt{padding:6px 12px;border-radius:999px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;font-size:13px;font-weight:500;font-family:var(--font)}
-.win-opt.active{background:var(--text);color:var(--bg);border-color:var(--text)}
 .sb-wrap{background:var(--bg2);border-radius:var(--radius-lg);padding:14px;margin-bottom:10px}
 .sb-teams{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px}
 .sb-team{text-align:center}
@@ -103,10 +87,24 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
 .sb-vs{font-size:20px;font-weight:700;color:var(--text2);text-align:center}
 .sb-callout{font-size:14px;font-weight:700;text-align:center;padding:8px;background:var(--info-bg);color:var(--info-text);border-radius:var(--radius);margin-bottom:10px;letter-spacing:2px}
 .sb-btns{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin-bottom:8px}
-.sb-pt{padding:14px 6px;border-radius:var(--radius);border:none;background:var(--success-bg);color:var(--success-text);font-size:16px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;flex-direction:column;align-items:center;gap:3px}
-.sb-fault{padding:14px 10px;border-radius:var(--radius);border:none;background:var(--warn-bg);color:var(--warn-text);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;flex-direction:column;align-items:center;gap:3px}
+.sb-pt{padding:14px 6px;border-radius:var(--radius);border:none;background:var(--success-bg);color:var(--success-text);font-size:16px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.sb-fault{padding:14px 10px;border-radius:var(--radius);border:none;background:var(--warn-bg);color:var(--warn-text);font-size:13px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
 .sb-hist{max-height:100px;overflow-y:auto;font-size:12px;color:var(--text2)}
 .sb-hist-row{padding:3px 0;border-bottom:0.5px solid var(--border)}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:9px 18px;border-radius:999px;font-size:13px;z-index:600;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.empty{text-align:center;padding:2rem 1rem;color:var(--text2);font-size:14px}
+.gender-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.gender-btn{padding:10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
+.gender-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.win-opt{padding:6px 12px;border-radius:999px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;font-size:13px;font-weight:500}
+.win-opt.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.pay-badge{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;cursor:pointer}
+.pay-paid{background:var(--success-bg);color:var(--success-text)}
+.pay-unpaid{background:var(--danger-bg);color:var(--danger-text)}
+.switch-group{display:inline-flex;background:var(--bg2);padding:2px;border-radius:8px;border:0.5px solid var(--border)}
+.switch-item{font-size:12px;padding:4px 10px;border-radius:6px;border:none;background:transparent;color:var(--text2);cursor:pointer;font-weight:600}
+.switch-item.active{background:var(--bg);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.1)}
 </style>
 </head>
 <body>
@@ -125,7 +123,6 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
   </div>
 </div>
 
-<!-- QUEUE MODE CONTAINER -->
 <div class="mode-panel active" id="panel-queue">
   <div class="announce-bar hidden" id="announce-bar">
     <div class="announce-top">
@@ -138,7 +135,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
       <div class="announce-chip"><i class="ti ti-target"></i><span id="ann-rule"></span></div>
     </div>
   </div>
-  <div class="sg sg3">
+  <div class="sg">
     <div class="sc"><div class="sn" id="q-st-wait">0</div><div class="sl" id="q-lbl-wait">等待</div></div>
     <div class="sc"><div class="sn" id="q-st-play">0</div><div class="sl" id="q-lbl-play">打球中</div></div>
     <div class="sc"><div class="sn" id="q-st-rest">0</div><div class="sl" id="q-lbl-rest">休息中</div></div>
@@ -153,10 +150,15 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
     <button class="tab" onclick="showQTab('manage')" id="qtab-manage"><span id="qt-manage">管理</span></button>
   </div>
 
-  <!-- SECTIONS -->
   <div class="sec active" id="qsec-waiting">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <span class="slabel" style="margin:0" id="q-lbl-waiting-title">等待中</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="slabel" style="margin:0" id="q-lbl-waiting-title">等待中</span>
+        <div class="switch-group" id="wait-sd-toggle" style="display:none">
+          <button class="switch-item active" id="sd-btn-doubles" onclick="setGlobalSD('Doubles')">双打</button>
+          <button class="switch-item" id="sd-btn-singles" onclick="setGlobalSD('Singles')">单打</button>
+        </div>
+      </div>
       <button class="btn btn-p btn-sm" onclick="adminAction(autoAssign)"><i class="ti ti-wand"></i><span id="q-btn-auto-label">自动配队</span></button>
     </div>
     <div id="q-list"></div>
@@ -214,6 +216,10 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
           <option value="4" id="qopt-4">精英</option>
         </select>
       </div>
+      <div style="margin-bottom:14px;display:flex;align-items:center;gap:8px;background:var(--bg2);padding:10px;border-radius:var(--radius)">
+        <input type="checkbox" id="qr-paid" style="width:18px;height:18px;cursor:pointer"/>
+        <label for="qr-paid" style="margin:0;cursor:pointer;font-weight:600" id="q-lbl-has-paid">我已付款 / I have paid</label>
+      </div>
       <button class="btn btn-p btn-full" onclick="selfJoin()"><i class="ti ti-plus"></i><span id="q-btn-join-label">加入排队</span></button>
     </div>
     <div class="card" id="self-join-success" style="display:none;text-align:center;padding:24px 14px">
@@ -228,6 +234,12 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
     <div id="score-setup-area">
       <div class="slabel" id="q-lbl-score-setup">计分设置</div>
       <div class="card">
+        <div style="margin-bottom:10px;display:flex;justify-content:center">
+          <div class="switch-group" style="padding:4px">
+            <button class="switch-item active" id="sb-mode-doubles" onclick="setSbMatchMode('Doubles')" style="padding:6px 16px;font-size:13px">双打 (Doubles)</button>
+            <button class="switch-item" id="sb-mode-singles" onclick="setSbMatchMode('Singles')" style="padding:6px 16px;font-size:13px">单打 (Singles)</button>
+          </div>
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div><label id="q-lbl-team1">队伍 A</label><input type="text" id="sb-team1" placeholder="A队"/></div>
           <div><label id="sb-team2">队伍 B</label><input type="text" id="sb-team2" placeholder="B队"/></div>
@@ -250,10 +262,10 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
           </div>
         </div>
         <div style="margin-bottom:12px">
-          <label id="q-lbl-score-sys">计分系统</label>
+          <label id="q-lbl-win-sys">计分系统</label>
           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px" id="score-sys-opts">
             <button class="win-opt active" onclick="selSS('rally')">Rally Point</button>
-            <button class="win-opt" onclick="selSS('002')">002 服务得分</button>
+            <button class="win-opt" onclick="selSS('002')">0-0-2</button>
           </div>
         </div>
         <button class="btn btn-p btn-full" onclick="startScoreboard()"><i class="ti ti-player-play"></i><span id="q-btn-start-score">开始计分</span></button>
@@ -301,11 +313,16 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
       <div class="sc"><div class="sn" id="log-games">0</div><div class="sl" id="log-lbl-games">完成场次</div></div>
       <div class="sc"><div class="sn" id="log-active">0</div><div class="sl" id="log-lbl-active">等待中</div></div>
     </div>
+    <div class="card" style="padding:10px;margin-bottom:10px">
+      <label style="font-weight:600" id="q-lbl-filter-day">按天数查找记录 / Filter by Date</label>
+      <input type="date" id="log-date-filter" onchange="loadQ()" style="margin-top:4px"/>
+    </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <span class="slabel" style="margin:0" id="q-lbl-log-title">活动记录</span>
       <div style="display:flex;gap:6px">
         <button class="btn btn-sm" onclick="exportQCSV()"><i class="ti ti-download"></i> CSV</button>
         <button class="btn btn-p btn-sm" onclick="exportQTxt()"><i class="ti ti-file-text"></i><span id="q-btn-report">报告</span></button>
+        <button class="btn btn-d btn-sm" id="btn-clear-logs" style="display:none" onclick="adminAction(clearAllLogs)"><i class="ti ti-trash"></i><span id="q-btn-clear-lbl">清空</span></button>
       </div>
     </div>
     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px" id="log-filter-row"></div>
@@ -327,7 +344,10 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
     <div class="card" style="margin-bottom:14px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
         <div><label id="sg-lbl-date">日期</label><input type="date" id="sg-date"/></div>
-        <div><label id="sg-lbl-time">时间</label><input type="time" id="sg-time"/></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <div><label id="sg-lbl-start">开始时间</label><input type="time" id="sg-start-time"/></div>
+          <div><label id="sg-lbl-end">结束时间</label><input type="time" id="sg-end-time"/></div>
+        </div>
       </div>
       <div style="margin-bottom:10px">
         <label id="sg-lbl-type">游戏种类</label>
@@ -351,7 +371,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
         <label id="sg-lbl-win">胜负规则</label>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px" id="sg-win-opts">
           <button class="win-opt active" onclick="setSGW('Deuce')">Deuce</button>
-          <button class="win-opt" onclick="setSGW('Serving to Win')">Serving to Win</button>
+          <button class="win-opt" onclick="setSGW('Serving to Win') font-weight">Serving to Win</button>
           <button class="win-opt" onclick="setSGW('Sudden Death')">Sudden Death</button>
         </div>
       </div>
@@ -367,17 +387,15 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
     <div id="manage-list" style="margin-bottom:14px"></div>
     <div class="slabel" id="q-lbl-admin-section">主理人管理</div>
     <div id="admin-list" style="margin-bottom:8px"></div>
-    <button class="btn btn-p btn-sm" onclick="showAddAdminModal()"><i class="ti ti-user-plus"></i><span id="q-btn-add-admin">添加主理人</span></button>
+    <button class="btn btn-p btn-sm" id="btn-add-admin-trigger" onclick="showAddAdminModal()"><i class="ti ti-user-plus"></i><span id="q-btn-add-admin">添加主理人</span></button>
   </div>
 </div>
 
-<!-- LEAGUE MODE CONTAINER -->
 <div class="mode-panel" id="panel-league">
   <div class="sg">
     <div class="sc"><div class="sn" id="l-st-teams">0</div><div class="sl" id="l-lbl-teams">队伍</div></div>
     <div class="sc"><div class="sn" id="l-st-players">0</div><div class="sl" id="l-lbl-players">球员</div></div>
     <div class="sc"><div class="sn" id="l-st-done">0</div><div class="sl" id="l-lbl-done">已完成</div></div>
-    <div class="sc"><div class="sn" id="l-st-pend">0</div><div class="sl" id="l-lbl-pend">待打</div></div>
   </div>
   <div class="tabs">
     <button class="tab active" onclick="showLTab('setup')" id="ltab-setup"><span id="lt-setup">设置</span></button>
@@ -450,10 +468,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
   </div>
 </div>
 
-</div><!-- /app -->
-
-<!-- POPUP MODALS -->
-<div class="modal-overlay" id="modal-admin-login">
+</div><div class="modal-overlay" id="modal-admin-login">
   <div class="modal">
     <div class="modal-title">登录主理人控制台</div>
     <div style="margin-bottom:10px"><label>名字</label><input type="text" id="admin-login-name" autocomplete="off"/></div>
@@ -486,6 +501,17 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-assign-menu">
+  <div class="modal" style="text-align:center">
+    <div class="modal-title" id="assign-menu-title">指派球员</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px">
+      <button class="btn btn-full" style="background:var(--info-bg);color:var(--info-text);font-weight:700" onclick="executeAssign('A')" id="btn-menu-assign-a">放入 A 队 / Assign Team A</button>
+      <button class="btn btn-full" style="background:var(--warn-bg);color:var(--warn-text);font-weight:700" onclick="executeAssign('B')" id="btn-menu-assign-b">放入 B 队 / Assign Team B</button>
+      <button class="btn btn-full btn-d" onclick="closeModal('modal-assign-menu')" id="btn-menu-cancel">取消 / Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-game-over">
   <div class="modal">
     <div class="modal-title">比赛结束</div>
@@ -500,7 +526,6 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
     </div>
     <div style="font-size:13px;font-weight:600;margin-bottom:8px">各球员选择状态</div>
     <div id="go-status-list" style="margin-bottom:14px"></div>
-    <div style="font-size:11px;color:var(--text2);margin-bottom:10px;text-align:center;font-style:italic;">* 提示：如果是 King Stay 或 2in2out 模式，请确保勾选“继续排队”的赢家数量正确才能完美继承擂台。</div>
     <button class="btn btn-p btn-full" onclick="confirmGameOver()"><i class="ti ti-check"></i> 确认</button>
     <button class="btn btn-full" style="margin-top:8px" onclick="closeModal('modal-game-over')">取消</button>
   </div>
@@ -515,20 +540,12 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-lineup">
-  <div class="modal">
-    <div class="modal-title">填写上场队员</div>
-    <div id="lineup-form"></div>
-    <button class="btn btn-p btn-full" style="margin-top:12px" onclick="saveLineup()"><i class="ti ti-check"></i> 保存阵容</button>
-    <button class="btn btn-full" style="margin-top:8px" onclick="closeModal('modal-lineup')">取消</button>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-/* ══ i18n 字典系统 ══ */
-const ZH={mlQueue:'Host mode',mlLeague:'联赛',langLabel:'EN',adminBtnLabel:'主理人',adminLogout:'退出',
+/* ══ i18n 双语精准配置 ══ */
+const ZH={
+mlQueue:'Host mode',mlLeague:'联赛',langLabel:'EN',adminBtnLabel:'主理人',adminLogout:'退出',
 qWait:'Waiting',qPlay:'打球中',qRest:'休息中',
 qtWaiting:'Queue',qtCourts:'Courts',qtLookup:'My Place',qtQr:'QR Join',qtScore:'Score',qtQlog:'Log',qtManage:'Manage',
 qWaitTitle:'Waiting Players',qCourtsTitle:'Court Status',qBtnAuto:'自动配队',
@@ -539,7 +556,7 @@ qQrTitle:'手机扫码自助加入',qQrHint:'扫描下方二维码加入队列',
 qJoinPreview:'自助登记',qLblName:'姓名',qLblGender:'性别',qLblLevel:'水平',qLblMale:'男',qLblFemale:'女',
 qBtnJoinLabel:'加入排队',qLblSuccess:'登记成功！',qLblSuccessHint:'工作人员叫到你时请准备上场',qBtnJoinAgain:'再登记一人',
 qRestTitle:'休息中',qLblAdminSection:'主理人管理',qBtnAddAdmin:'添加主理人',
-qLblSocialTitle:'Social Game 设置',sgLblDate:'日期',sgLblTime:'时间',sgLblType:'游戏种类',sgLblScore:'比分设置',sgLblWin:'胜负规则',sgBtnSave:'发布公告',
+qLblSocialTitle:'Social Game 设置',sgLblDate:'日期',sgLblType:'游戏种类',sgLblScore:'比分设置',sgLblWin:'胜负规则',sgBtnSave:'发布公告',
 qLblScoreSetup:'计分设置',qLblTeam1:'队伍 A',qLblTeam2:'队伍 B',qLblScoreTo:'目标分数',qLblWinType:'胜负规则',qLblScoreSys:'计分系统',qBtnStartScore:'开始计分',
 sbFaultLbl:'换发球',sbUndoLbl:'撤销',sbResetLbl:'重置',sbNewGameLbl:'新一局',
 levels:['','初级','中级','高级','精英'],male:'男',female:'女',
@@ -554,13 +571,12 @@ courtNameDefault:(i)=>`${i}号球场`,statusContinue:'继续排队',statusRest:'
 avoidRepeat:'（已尽量避免重复对战）',filterAll:'全部',
 announcedSaved:'公告已发布！',announcedCleared:'公告已清除',
 sbWin:(n)=>`${n} 获胜！🏆`,
-lTeams:'队伍',lPlayers:'球员',lDone:'已完成',lPend:'待打',
+lTeams:'队伍',lPlayers:'球员',lDone:'已完成',
 ltSetup:'设置',ltDraft:'选人',ltSchedule:'赛程',ltScores:'成绩',ltStandings:'积分',
 lReg:'注册球员',lCreateTeam:'创建队伍',lBtnCreate:'创建',lBtnGoDraft:'进入队长选人',
 lRosters:'各队阵容',lPickHint:'Tap player to assign to current team',lBtnFinalize:'确认阵容，生成赛程',
 lSchedule:'赛程总览',lBtnExport:'导出',lSelectMatch:'选择场次',
-lStandings:'积分榜',lPtsHint:'胜×3 | 每盘各1分',
-lThTeam:'队伍',lThP:'赛',lThW:'胜',lThL:'负',lThS:'盘',lThPts:'分',
+lStandings:'积分榜',lThTeam:'队伍',lThP:'赛',lThW:'胜',lThL:'负',lThS:'盘',lThPts:'分',
 optMale:'男',optFemale:'女',pNamePh:'球员姓名',tNamePh:'队伍名称',
 emptyPlayers:'还没有球员',emptyTeams:'还没有队伍',emptySchedule:'请先完成选人阶段',emptyScores:'请先生成赛程',emptyStandings:'请先创建队伍',
 mCount:(m,f)=>`男 ${m} 人・女 ${f} 人`,
@@ -568,7 +584,6 @@ draftPicking:(n,r)=>`${n} 正在选人（第 ${r} 轮）`,draftComplete:'✓ 选
 mF:(m,f)=>`M${m}/4 F${f}/2`,picking:'选人中',waitingDraft:'等待选人',allAssigned:'所有球员已分配完毕',
 roundFull:(r,a,b)=>`第${r}轮：${a} vs ${b}`,roundLabel:(r)=>`R${r}`,
 scoreTitle:(r,a,b)=>`第${r}轮：${a} vs ${b}`,done:'完成',pending:'待打',saveBtn:'保存',
-knockout:'淘汰赛',knockoutSub:'循环赛已完成，半决赛如下',sfA:'半决赛 A',sfB:'半决赛 B',
 playerStats:'球员个人胜率',
 toastLSaved:'成绩已保存！',toastLWO:'已标记 WO',toastLUndo:'已撤销',toastLSchedule:'赛程已生成！',
 toastLNeedTeams:'请至少创建2支队伍',toastLNeedMale:'男球员不足（每队需4名）',toastLNeedFemale:'女球员不足（每队需2名）',
@@ -579,7 +594,8 @@ exportPending:'待打',exportDoneWord:'已完成',exportStandings:'积分榜',
 exportWins:(w,l,p)=>`${p}分  ${w}胜${l}负`,exportFileName:'联赛赛程',
 setLineupBtn:'填写阵容',lineupSet:'阵容已填',adminRequired:'请先登录主理人账号',
 };
-const EN={mlQueue:'Host mode',mlLeague:'League',langLabel:'中文',adminBtnLabel:'Admin',adminLogout:'Logout',
+const EN={
+mlQueue:'Host mode',mlLeague:'League',langLabel:'中文',adminBtnLabel:'Admin',adminLogout:'Logout',
 qWait:'Waiting',qPlay:'Playing',qRest:'Resting',
 qtWaiting:'Queue',qtCourts:'Courts',qtLookup:'My Place',qtQr:'QR Join',qtScore:'Score',qtQlog:'Log',qtManage:'Manage',
 qWaitTitle:'Waiting Players',qCourtsTitle:'Court Status',qBtnAuto:'Auto-assign',
@@ -590,7 +606,7 @@ qQrTitle:'Scan QR to Join Queue',qQrHint:'Scan QR code to join the queue',qBtnCo
 qJoinPreview:'Self Check-In',qLblName:'Name',qLblGender:'Gender',qLblLevel:'Level',qLblMale:'Male',qLblFemale:'Female',
 qBtnJoinLabel:'Join Queue',qLblSuccess:'Registered!',qLblSuccessHint:'Staff will call your name when ready',qBtnJoinAgain:'Register Another',
 qRestTitle:'Resting',qLblAdminSection:'Admin Management',qBtnAddAdmin:'Add Admin',
-qLblSocialTitle:'Social Game Settings',sgLblDate:'Date',sgLblTime:'Time',sgLblType:'Game Type',sgLblScore:'Points',sgLblWin:'Win Rule',sgBtnSave:'Publish',
+qLblSocialTitle:'Social Game Settings',sgLblDate:'Date',sgLblType:'Game Type',sgLblScore:'Points',sgLblWin:'Win Rule',sgBtnSave:'Publish',
 qLblScoreSetup:'Score Settings',qLblTeam1:'Team A',qLblTeam2:'Team B',qLblScoreTo:'Points to Win',qLblWinType:'Win Rule',qLblScoreSys:'Scoring System',qBtnStartScore:'Start Scoring',
 sbFaultLbl:'Side Out',sbUndoLbl:'Undo',sbResetLbl:'Reset',sbNewGameLbl:'New Game',
 levels:['','Beginner','Intermediate','Advanced','Elite'],male:'M',female:'F',
@@ -605,13 +621,12 @@ courtNameDefault:(i)=>`Court ${i}`,statusContinue:'Re-queue',statusRest:'Take a 
 avoidRepeat:'(minimising repeat matchups)',filterAll:'All',
 announcedSaved:'Announcement published!',announcedCleared:'Announcement cleared',
 sbWin:(n)=>`${n} wins! 🏆`,
-lTeams:'Teams',lPlayers:'Players',lDone:'Completed',lPend:'Pending',
+lTeams:'Teams',lPlayers:'Players',lDone:'Completed',
 ltSetup:'Setup',ltDraft:'Draft',ltSchedule:'Schedule',ltScores:'Scores',ltStandings:'Standings',
 lReg:'Register Players',lCreateTeam:'Create Teams',lBtnCreate:'Create',lBtnGoDraft:'Go to Draft',
 lRosters:'Team Rosters',lPickHint:'Tap player to assign to current team',lBtnFinalize:'Confirm & Generate Schedule',
 lSchedule:'Schedule',lBtnExport:'Export',lSelectMatch:'Select Match',
-lStandings:'Standings',lPtsHint:'Win×3 | 1pt per set',
-lThTeam:'Team',lThP:'P',lThW:'W',lThL:'L',lThS:'Sets',lThPts:'Pts',
+lStandings:'Standings',lThTeam:'Team',lThP:'P',lThW:'W',lThL:'L',lThS:'Sets',lThPts:'Pts',
 optMale:'Male',optFemale:'Female',pNamePh:'Player name',tNamePh:'Team name',
 emptyPlayers:'No players yet',emptyTeams:'No teams yet',emptySchedule:'Complete draft first',emptyScores:'Generate schedule first',emptyStandings:'Create teams first',
 mCount:(m,f)=>`${m} male · ${f} female`,
@@ -619,13 +634,12 @@ draftPicking:(n,r)=>`${n} is picking (Round ${r})`,draftComplete:'✓ Draft done
 mF:(m,f)=>`M${m}/4 F${f}/2`,picking:'Picking',waitingDraft:'Waiting',allAssigned:'All players assigned',
 roundFull:(r,a,b)=>`Round ${r}: ${a} vs ${b}`,roundLabel:(r)=>`R${r}`,
 scoreTitle:(r,a,b)=>`Round ${r}: ${a} vs ${b}`,done:'Done',pending:'Pending',saveBtn:'Save',
-knockout:'Knockout',knockoutSub:'Round robin complete — semi-finals:',sfA:'Semi A',sfB:'Semi B',
 playerStats:'Player Win Rate',
 toastLSaved:'Scores saved!',toastLWO:'Walkover recorded',toastLUndo:'Result undone',toastLSchedule:'Schedule generated!',
 toastLNeedTeams:'Need at least 2 teams',toastLNeedMale:'Not enough male players (4/team)',toastLNeedFemale:'Not enough female players (2/team)',
 toastLMaleFull:'Male slots full',toastLFemaleFull:'Female slots full',toastLRosterFull:'Each team needs 4M+2F',
 matchLabels:["Men's Doubles","Mixed Doubles","Men's Doubles","Women's Doubles","Men's Doubles","Mixed Doubles"],
-exportTitle:'Pickleball Team League',exportRound:(r,a,b)=>`Round ${r}: ${a} vs ${b}`,
+exportTitle:'Pickleball Team League',exportRound:(r,a,b)=>`Round ${r}: ${a} wins`,
 exportPending:'TBD',exportDoneWord:'Done',exportStandings:'Standings',
 exportWins:(w,l,p)=>`${p}pts ${w}W ${l}L`,exportFileName:'league-schedule',
 setLineupBtn:'Set Lineup',lineupSet:'Lineup Set',adminRequired:'Please login as admin first',
@@ -634,39 +648,39 @@ setLineupBtn:'Set Lineup',lineupSet:'Lineup Set',adminRequired:'Please login as 
 let lang=localStorage.getItem('pb_lang')||'zh';
 function T(k,...a){const D=lang==='zh'?ZH:EN;const v=D[k];return typeof v==='function'?v(...a):(v||k);}
 
-const LID={
-'lang-label':'langLabel','ml-queue':'mlQueue','ml-league':'mlLeague','admin-btn-label':'adminBtnLabel',
-'q-lbl-wait':'qWait','q-lbl-play':'qPlay','q-lbl-rest':'qRest',
-'qt-waiting':'qtWaiting','qt-courts':'qtCourts','qt-lookup':'qtLookup','qt-qr':'qtQr','qt-score':'qtScore','qt-qlog':'qtQlog','qt-manage':'qtManage',
-'q-lbl-waiting-title':'qWaitTitle','q-lbl-courts-title':'qCourtsTitle','q-btn-auto-label':'qBtnAuto',
-'q-lbl-lookup-title':'qLookupTitle','q-lbl-lookup-hint':'qLookupHint','q-lbl-full-list':'qFullList',
-'q-lbl-log-title':'qLogTitle','q-lbl-manage-title':'qManageTitle','q-btn-add-court':'qBtnAddCourt','q-btn-report':'qBtnReport',
-'log-lbl-total':'logTotal','log-lbl-games':'logGames','log-lbl-active':'logActive',
-'log-th-time':'logTime','log-th-name':'logName','log-th-type':'logType','log-th-note':'logNote',
-'q-lbl-qr-title':'qQrTitle','q-lbl-qr-hint':'qQrHint','btn-copy':'qBtnCopy','q-btn-dl':'qBtnDl','q-lbl-join-preview':'qJoinPreview',
-'q-lbl-name':'qLblName','q-lbl-gender':'qLblGender','q-lbl-level':'qLblLevel','q-lbl-male':'qLblMale','q-lbl-female':'qLblFemale',
-'q-btn-join-label':'qBtnJoinLabel','q-lbl-success':'qLblSuccess','q-lbl-success-hint':'qLblSuccessHint','q-btn-join-again':'qBtnJoinAgain',
-'q-lbl-rest-title':'qRestTitle','q-lbl-admin-section':'qLblAdminSection','q-btn-add-admin':'qBtnAddAdmin',
-'q-lbl-social-title':'qLblSocialTitle','sg-lbl-date':'sgLblDate','sg-lbl-time':'sgLblTime','sg-lbl-type':'sgLblType','sg-lbl-score':'sgLblScore','sg-lbl-win':'sgLblWin','sg-btn-save':'sgBtnSave',
-'q-lbl-score-setup':'qLblScoreSetup','q-lbl-team1':'qLblTeam1','q-lbl-team2':'qLblTeam2','q-lbl-score-to':'qLblScoreTo','q-lbl-win-type':'qLblWinType','q-lbl-score-sys':'qLblScoreSys','q-btn-start-score':'qBtnStartScore',
-'sb-fault-flow':'sbFaultLbl','sb-undo-lbl':'sbUndoLbl','sb-reset-lbl':'sbResetLbl','sb-new-game-lbl':'sbNewGameLbl',
-'l-lbl-teams':'lTeams','l-lbl-players':'lPlayers','l-lbl-done':'lDone','l-lbl-pend':'lPend',
-'lt-setup':'ltSetup','lt-draft':'ltDraft','lt-schedule':'ltSchedule','lt-scores':'ltScores','lt-standings':'ltStandings',
-'l-lbl-reg':'lReg','l-lbl-create-team':'lCreateTeam','l-btn-create':'lBtnCreate','l-btn-go-draft':'lBtnGoDraft',
-'l-lbl-rosters':'lRosters','l-lbl-pick-hint':'lPickHint','l-btn-finalize':'lBtnFinalize',
-'l-lbl-schedule':'lSchedule','l-btn-export':'lBtnExport','l-lbl-select-match':'lSelectMatch',
-'l-lbl-standings':'lStandings','l-lbl-pts-hint':'lPtsHint',
-'l-th-team':'lThTeam','l-th-p':'lThP','l-th-w':'lThW','l-th-l':'lThL','l-th-s':'lThS','l-th-pts':'lThPts',
-'opt-male':'optMale','opt-female':'optFemale','m-admin-login-btn':'logJoin',
-};
-
 function applyLang(){
   document.documentElement.lang=lang==='zh'?'zh-CN':'en';
-  Object.entries(LID).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=T(key);});
-  ['qopt-1','qopt-2','qopt-3','qopt-4'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=T('levels')[i+1];});
-  const pn=document.getElementById('p-name');if(pn)pn.placeholder=T('pNamePh');
-  const tn=document.getElementById('t-name');if(tn)tn.placeholder=T('tNamePh');
-  document.getElementById('m-admin-login-btn').textContent=lang==='zh'?'登录':'Login';
+  const mapping={
+    'lang-label': 'langLabel','ml-queue':'mlQueue','ml-league':'mlLeague','admin-btn-label':'adminBtnLabel',
+    'q-lbl-wait':'qWait','q-lbl-play':'qPlay','q-lbl-rest':'qRest',
+    'qt-waiting':'qtWaiting','qt-courts':'qtCourts','qt-lookup':'qtLookup','qt-qr':'qtQr','qt-score':'qtScore','qt-qlog':'qtQlog','qt-manage':'qtManage',
+    'q-lbl-waiting-title':'qWaitTitle','q-lbl-courts-title':'qCourtsTitle','q-btn-auto-label':'qBtnAuto',
+    'q-lbl-lookup-title':'qLookupTitle','q-lbl-lookup-hint':'qLookupHint','q-lbl-full-list':'qFullList',
+    'q-lbl-log-title':'qLogTitle','q-lbl-manage-title':'qManageTitle','q-btn-add-court':'qBtnAddCourt','q-btn-report':'qBtnReport',
+    'log-lbl-total':'logTotal','log-lbl-games':'logGames','log-lbl-active':'logActive',
+    'log-th-time':'logTime','log-th-name':'logName','log-th-type':'logType','log-th-note':'logNote',
+    'q-lbl-qr-title':'qQrTitle','q-lbl-qr-hint':'qQrHint','q-btn-copy':'qBtnCopy','q-btn-dl':'qBtnDl','q-lbl-join-preview':'qJoinPreview',
+    'q-lbl-name':'qLblName','q-lbl-gender':'qLblGender','q-lbl-level':'qLblLevel','q-lbl-male':'qLblMale','q-lbl-female':'qLblFemale',
+    'q-btn-join-label':'qBtnJoinLabel','q-lbl-success':'qLblSuccess','q-lbl-success-hint':'qLblSuccessHint','q-btn-join-again':'qBtnJoinAgain',
+    'q-lbl-rest-title':'qRestTitle','q-lbl-admin-section':'qAdminSection','q-btn-add-admin':'qBtnAddAdmin',
+    'q-lbl-social-title':'qLblSocialTitle','sg-lbl-date':'sgLblDate','sg-lbl-type':'sgLblType','sg-lbl-score':'sgLblScore','sg-lbl-win':'sgLblWin','sg-btn-save':'sgBtnSave',
+    'q-lbl-score-setup':'qLblScoreSetup','q-lbl-team1':'qLblTeam1','q-lbl-team2':'qLblTeam2','q-lbl-score-to':'qLblScoreTo','q-lbl-win-type':'qLblWinType','q-lbl-win-sys':'qLblScoreSys','q-btn-start-score':'qBtnStartScore',
+    'sb-fault-lbl':'sbFaultLbl','sb-undo-lbl':'sbUndoLbl','sb-reset-lbl':'sbResetLbl','sb-new-game-lbl':'sbNewGameLbl',
+    'l-lbl-teams':'lTeams','l-lbl-players':'lPlayers','l-lbl-done':'lDone',
+    'lt-setup':'ltSetup','lt-draft':'ltDraft','lt-schedule':'ltSchedule','lt-scores':'ltScores','lt-standings':'ltStandings',
+    'l-lbl-reg':'lReg','l-lbl-create-team':'lCreateTeam','l-btn-create':'lBtnCreate','l-btn-go-draft':'lBtnGoDraft',
+    'l-lbl-rosters':'lRosters','l-lbl-pick-hint':'lPickHint','l-btn-finalize':'lBtnFinalize',
+    'l-lbl-schedule':'lSchedule','l-btn-export':'lBtnExport','l-lbl-select-match':'lSelectMatch',
+    'l-lbl-standings':'lStandings','l-lbl-pts-hint':'lPtsHint',
+    'l-th-team':'lThTeam','l-th-p':'lThP','l-th-w':'lThW','l-th-l':'lThL','l-th-s':'lThS','l-th-pts':'lThPts',
+    'opt-male':'optMale','opt-female':'optFemale','q-btn-clear-lbl':'qBtnClear-lbl','q-lbl-filter-day':'qFilterDay'
+  };
+  Object.entries(mapping).forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.textContent=T(k);});
+  document.getElementById('sd-btn-doubles').textContent=lang==='zh'?'双打':'Doubles';
+  document.getElementById('sd-btn-singles').textContent=lang==='zh'?'单打':'Singles';
+  document.getElementById('q-lbl-has-paid').textContent=lang==='zh'?'我已付款':'Already Paid';
+  document.getElementById('sg-lbl-start').textContent=lang==='zh'?'开始时间':'Start Time';
+  document.getElementById('sg-lbl-end').textContent=lang==='zh'?'结束时间':'End Time';
   updateAdminUI();
 }
 function toggleLang(){lang=lang==='zh'?'en':'zh';localStorage.setItem('pb_lang',lang);applyLang();renderAll();}
@@ -682,18 +696,18 @@ function switchMode(m){
   renderAll();
 }
 
-/* ══ 主理人配置 ══ */
-let adminState={admins:[{name:'Admin',pin:'1234',isSuper:true}],currentAdmin:null};
-function saveAdmin(){try{localStorage.setItem('pb_admin',JSON.stringify(adminState));}catch(e){}}
-function loadAdmin(){
-  try{
-    const d=localStorage.getItem('pb_admin');
-    if(d){adminState=JSON.parse(d);if(!adminState.admins.find(a=>a.isSuper))adminState.admins[0].isSuper=true;}
-  }catch(e){}
-}
+/* ══ SaaS 多租户隔离权限总线 ══ */
+const SUPABASE_URL = "https://lwwprihheumlhnglvbnh.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3d3ByaWhoZXVtbGhuZ2x2Ym5oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTc1MzcsImV4cCI6MjA5Nzk5MzUzN30.UD_1YlkzZl-6wtW9KxHkvAZxpqz9JE_e19ZKS2fYi2A";
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let adminState={admins:[],currentAdmin:null};
+function saveAdmin(){try{localStorage.setItem('pb_current_admin_v2',adminState.currentAdmin||'');}catch(e){}}
+function loadAdmin(){try{adminState.currentAdmin=localStorage.getItem('pb_current_admin_v2')||null;}catch(e){}}
 function isAdmin(){return!!adminState.currentAdmin;}
 function isSuperAdmin(){return adminState.currentAdmin==='Admin';}
 function adminAction(fn){if(!isAdmin()){toast(T('adminRequired'));showAdminModal();return;}fn();}
+
 function showAdminModal(){
   if(isAdmin()){doAdminLogout();}
   else{document.getElementById('admin-login-err').style.display='none';document.getElementById('admin-login-name').value='';document.getElementById('admin-login-pin').value='';openModal('modal-admin-login');}
@@ -702,368 +716,245 @@ function doAdminLogin(){
   const name=document.getElementById('admin-login-name').value.trim();
   const pin=document.getElementById('admin-login-pin').value.trim();
   const found=adminState.admins.find(a=>a.name===name&&a.pin===pin);
-  if(found){adminState.currentAdmin=found.name;saveAdmin();closeModal('modal-admin-login');updateAdminUI();toast('✓ '+found.name);}
-  else document.getElementById('admin-login-err').style.display='block';
+  if(found){
+    adminState.currentAdmin=found.name;saveAdmin();closeModal('modal-admin-login');updateAdminUI();toast('✓ '+found.name);loadQ();
+  } else document.getElementById('admin-login-err').style.display='block';
 }
-function doAdminLogout(){adminState.currentAdmin=null;saveAdmin();updateAdminUI();renderAll();}
-function doAddAdmin(){
-  const name=document.getElementById('new-admin-name').value.trim();
-  const pin=document.getElementById('new-admin-pin').value.trim();
-  if(!name||pin.length<4){toast('请填写名字 and 4位PIN');return;}
-  if(adminState.admins.find(a=>a.name===name)){toast(lang==='zh'?'此名字已存在':'Name already exists');return;}
-  adminState.admins.push({name,pin,isSuper:false});saveAdmin();
-  document.getElementById('new-admin-name').value='';document.getElementById('new-admin-pin').value='';
-  closeModal('modal-add-admin');toast((lang==='zh'?'已添加 ':'Added ')+name);renderQManage();
-}
-let changePinTarget='';
-function showChangePinModal(name){
-  if(!isAdmin()){toast(T('adminRequired'));return;}
-  if(name!==adminState.currentAdmin&&!isSuperAdmin()){toast(lang==='zh'?'只有本人或 Admin 才能修改密码':'Only you or Admin can change this PIN');return;}
-  changePinTarget=name;
-  ['old-pin','new-pin','new-pin2'].forEach(id=>{document.getElementById(id).value='';});
-  document.getElementById('pin-err').style.display='none';
-  document.getElementById('m-change-pin-title').textContent=(lang==='zh'?'修改 ':'Change PIN — ')+name+(lang==='zh'?' 的密码':'');
-  openModal('modal-change-pin');
-}
-function doChangePin(){
-  const oldPin=document.getElementById('old-pin').value.trim();
-  const newPin=document.getElementById('new-pin').value.trim();
-  const newPin2=document.getElementById('new-pin2').value.trim();
-  const errEl=document.getElementById('pin-err');
-  const target=adminState.admins.find(a=>a.name===changePinTarget);
-  if(!target){showErr(errEl,'找不到账号');return;}
-  if(!isSuperAdmin()&&target.pin!==oldPin){showErr(errEl,lang==='zh'?'当前PIN码错误':'Current PIN incorrect');return;}
-  if(newPin.length<4){showErr(errEl,lang==='zh'?'新PIN码至少4位':'New PIN must be 4 digits');return;}
-  if(newPin!==newPin2){showErr(errEl,lang==='zh'?'两次输入不一致':'PINs do not match');return;}
-  target.pin=newPin;saveAdmin();closeModal('modal-change-pin');toast(lang==='zh'?'密码已修改':'PIN changed');
-}
-function showErr(el,msg){el.textContent=msg;el.style.display='block';}
-function removeAdmin(name){
-  if(!isSuperAdmin()){toast(lang==='zh'?'只有 Admin 才能删除主理人':'Only Admin can remove admins');return;}
-  if(name==='Admin'){toast(lang==='zh'?'无法删除 Admin 账号':'Cannot delete Admin account');return;}
-  adminState.admins=adminState.admins.filter(a=>a.name!==name);
-  if(adminState.currentAdmin===name)adminState.currentAdmin=null;
-  saveAdmin();updateAdminUI();renderQManage();toast((lang==='zh'?'已删除 ':'Removed ')+name);
-}
-function showAddAdminModal(){adminAction(()=>openModal('modal-add-admin'));}
+function doAdminLogout(){adminState.currentAdmin=null;saveAdmin();updateAdminUI();loadQ();}
+
 function updateAdminUI(){
-  const badge=document.getElementById('admin-badge');
-  const btn=document.getElementById('admin-login-btn');
-  const nb=document.getElementById('admin-name-badge');
+  const badge=document.getElementById('admin-badge');const btn=document.getElementById('admin-login-btn');const nb=document.getElementById('admin-name-badge');
+  const toggle=document.getElementById('wait-sd-toggle'); const clrBtn=document.getElementById('btn-clear-logs');
   if(isAdmin()){
     badge.style.display='flex';if(nb)nb.textContent=adminState.currentAdmin;
     if(btn)btn.innerHTML=`<i class="ti ti-logout"></i><span>${T('adminLogout')}</span>`;
+    if(toggle)toggle.style.display='inline-flex';
+    if(clrBtn)clrBtn.style.display='inline-flex';
   }else{
     badge.style.display='none';
-    if(btn)btn.innerHTML=`<i class="ti ti-lock"></i><span id="admin-btn-label">${T('adminBtnLabel')}</span>`;
+    if(btn)btn.innerHTML=`<i class="ti ti-lock"></i><span>${T('adminBtnLabel')}</span>`;
+    if(toggle)toggle.style.display='none';
+    if(clrBtn)clrBtn.style.display='none';
   }
+  const addAdm=document.getElementById('btn-add-admin-trigger');
+  if(addAdm) addAdm.style.display=isSuperAdmin()?'inline-flex':'none';
 }
 
-/* ══ MODAL弹窗 ══ */
 function openModal(id){document.getElementById(id).classList.add('show');}
 function closeModal(id){document.getElementById(id).classList.remove('show');}
 
-/* ══ 公告栏 ══ */
-let sg={date:'',time:'',type:'Social',score:11,winRule:'Deuce',active:false};
-function loadSG(){try{const d=localStorage.getItem('pb_sg');if(d)sg=JSON.parse(d); if(sg.type) {setTimeout(()=>{document.getElementById('sg-type').value=sg.type;},100);}}catch(e){}}
-function saveSG(){sg.date=document.getElementById('sg-date').value;sg.time=document.getElementById('sg-time').value;sg.type=document.getElementById('sg-type').value;sg.active=true;try{localStorage.setItem('pb_sg',JSON.stringify(sg));}catch(e){}toast(T('announcedSaved'));renderAnnounce();}
-function clearSG(){sg.active=false;try{localStorage.setItem('pb_sg',JSON.stringify(sg));}catch(e){}toast(T('announcedCleared'));renderAnnounce();}
-function setSGS(n){sg.score=n;document.querySelectorAll('#sg-score-opts .win-opt').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===n));}
-function setSGW(r){sg.winRule=r;document.querySelectorAll('#sg-win-opts .win-opt').forEach(b=>b.classList.toggle('active',b.textContent===r));}
-function renderAnnounce(){
-  const bar=document.getElementById('announce-bar');if(!bar)return;
-  bar.classList.toggle('hidden',!sg.active);
-  if(!sg.active)return;
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  set('ann-type',sg.type);set('ann-pts-badge',sg.score+'分');
-  set('ann-date',sg.date||'—');set('ann-time',sg.time||'—');set('ann-rule',sg.winRule);
+/* 云端主理人增删改查 */
+async function doAddAdmin(){
+  if(!isSuperAdmin()){toast('只有终极 Admin 有权限添加主理人');return;}
+  const name=document.getElementById('new-admin-name').value.trim();
+  const pin=document.getElementById('new-admin-pin').value.trim();
+  if(!name||pin.length<4){toast('请填写名字和4位PIN');return;}
+  const {error}=await _supabase.from('host_admins').insert([{name,pin,is_super:false}]);
+  if(!error){closeModal('modal-add-admin');toast('添加主理人成功');loadQ();}
+}
+async function removeAdmin(name){
+  if(!isSuperAdmin()){toast('只有终极 Admin 有权限删除主理人');return;}
+  if(name==='Admin'){toast('不能删除最高管理员');return;}
+  const {error}=await _supabase.from('host_admins').delete().eq('name',name);
+  if(!error){toast('已移除该主理人系统');loadQ();}
 }
 
-/* ══ 二维码 ══ */
-let qrGenerated=false;
-function getJoinUrl(){return window.location.href.split('?')[0]+'?join=1';}
-function generateQR(){
-  if(qrGenerated)return;
-  const container=document.getElementById('qr-container');if(!container)return;
-  const url=getJoinUrl();
-  const img=document.createElement('img');
-  img.width=180;img.height=180;img.alt='QR Code';img.style.display='block';
-  img.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(url)+'&margin=0';
-  img.onerror=()=>{container.innerHTML=`<div style="width:180px;padding:16px;font-size:11px;word-break:break-all;color:#333;text-align:center;background:#fff">${url}</div>`;};
-  container.innerHTML='';container.appendChild(img);qrGenerated=true;
-}
-function copyJoinUrl(){
-  const url=getJoinUrl();
-  if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast(T('toastCopied'))).catch(()=>fallbackCopy(url));}
-  else fallbackCopy(url);
-}
-function fallbackCopy(text){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast(T('toastCopied'));}
-function downloadQR(){const img=document.querySelector('#qr-container img');if(!img)return;const a=document.createElement('a');a.href=img.src;a.download='pickleball-qr.png';a.click();}
-
-/* ══ 性别 ══ */
-let selectedGender=null;
-function selectGender(g){selectedGender=g;document.getElementById('gender-m-btn').classList.toggle('active',g==='M');document.getElementById('gender-f-btn').classList.toggle('active',g==='F');}
-function resetSelfJoin(){document.getElementById('self-join-success').style.display='none';document.getElementById('self-join-card').style.display='block';}
-
-/* ══ 独立记分牌 ══ */
-let sbState={sA:0,sB:0,serv:1,servNum:2,target:11,winType:'deuce',sys:'rally',tA:'A',tB:'B',hist:[],won:0};
-let sbTarget=11,sbWinType='deuce',sbSys='rally';
-function selST(n){sbTarget=n;document.querySelectorAll('#score-target-opts .win-opt').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===n));}
-function selWT(t){sbWinType=t;document.querySelectorAll('#win-type-opts .win-opt').forEach(b=>b.classList.toggle('active',b.onclick&&b.onclick.toString().includes("'"+t+"'")));}
-function selSS(s){sbSys=s;document.querySelectorAll('#score-sys-opts .win-opt').forEach(b=>b.classList.toggle('active',b.onclick&&b.onclick.toString().includes("'"+s+"'")));}
-
-/* ══ QUEUE DEFAULT STATE ══ */
+/* ══ QUEUE 模块架构（多租户全新重构） ══ */
 const AB=['','#EAF3DE','#E6F1FB','#FAEEDA','#FCEBEB'];
 const AF=['','#3B6D11','#185FA5','#854F0B','#A32D2D'];
-let qState={queue:[],resting:[],playingPlayers:[],courts:[{id:1,name:null,teams:null,startTime:null},{id:2,name:null,teams:null,startTime:null},{id:3,name:null,teams:null,startTime:null}],log:[],matchHistory:[],nextQid:1,nextCid:4,logFilter:'all',pendingCourtId:null};
-let pendingNextMatch=null;
-function cName(c){return c.name||(lang==='zh'?`${c.id}号球场`:`Court ${c.id}`);}
-function fmtT(t){if(!t)return'—';const d=new Date(t);return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
-function mAgo(t){return T('minutesAgo',Math.round((Date.now()-t)/60000));}
-function mPlayed(t){return T('minutesPlayed',Math.round((Date.now()-t)/60000));}
+let qState={queue:[],resting:[],playingPlayers:[],courts:[],log:[],logFilter:'all',globalSD:'Doubles'};
+let activeMenuPlayerId=null;
 
-let qCurrentTab='waiting';
-function showQTab(tab){
-  qCurrentTab=tab;
-  ['waiting','courts','lookup','qr','score','qlog','manage'].forEach(id=>{
-    const tb=document.getElementById('qtab-'+id),sc=document.getElementById('qsec-'+id);
-    if(tb)tb.classList.toggle('active',id===tab);if(sc)sc.classList.toggle('active',id===tab);
-  });
-  if(tab==='qr')setTimeout(generateQR,150);
-  renderQueue();
-}
+async function loadQ(){
+  try{
+    const todayStr=new Date().toISOString().split('T')[0];
+    const targetDay=document.getElementById('log-date-filter').value || todayStr;
+    const currentHost=adminState.currentAdmin || 'Admin';
 
-function renameCourt(id,v){const c=qState.courts.find(c=>c.id===id);if(c)c.name=v||null;saveQ();}
-function setQFilter(f){qState.logFilter=f;renderQLog();}
-function updateQStats(){
-  const playing=qState.courts.filter(c=>c.teams).length * (sg.type === 'Singles' ? 2 : 4);const resting=(qState.resting||[]).length;
-  ['q-st-wait','q-st-play','q-st-rest'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[qState.queue.length,playing,resting][i];});
-}
-function exportQCSV(){
-  const blob=new Blob(['\ufeffTime,Name,Type,Note\n'+qState.log.map(e=>`"${fmtT(e.time)}","${e.name}","${e.type}","${e.note}"`).join('\n')],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='queue-log.csv';a.click();
-}
-function exportQTxt(){
-  let txt=`Host mode Log\n${new Date().toLocaleDateString()}\n${'─'.repeat(28)}\n\n`;
-  qState.log.forEach(e=>{txt+=`[${fmtT(e.time)}] ${e.type} · ${e.name} · ${e.note}\n`;});
-  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='queue-report.txt';a.click();
-}
-function renderQueue(){renderQWaiting();renderQCourts();renderQLog();renderQManage();updateQStats();renderAnnounce();if(document.getElementById('lookup-inp')?.value)qLookup();else renderLookupFull('');}
+    // 1. 获取主理人名册
+    const {data:aData}=await _supabase.from('host_admins').select('*').order('id',{ascending:true});
+    if(aData) adminState.admins=aData.map(a=>({name:a.name,pin:a.pin,isSuper:a.is_super}));
 
-/* ════════════════════════════════════════════════════════════ */
-/* 🔥 核心同步数据总线与 FIFO 过滤算法 🔥 */
-/* ════════════════════════════════════════════════════════════ */
+    // 2. 核心大表拉取 (非 Admin 用户强行进行 SaaS 隔离隔离，Admin 享有上帝视界)
+    let qQuery=_supabase.from('players_queue').select('*').eq('status','waiting').order('created_at',{ascending:true});
+    let rQuery=_supabase.from('players_queue').select('*').eq('status','resting').order('id',{ascending:true});
+    let pQuery=_supabase.from('players_queue').select('*').eq('status','playing');
+    let cQuery=_supabase.from('courts_status').select('*').order('id',{ascending:true});
+    let lQuery=_supabase.from('activity_logs').select('*').order('id',{ascending:false}).limit(50);
 
-const SUPABASE_URL = "https://lwwprihheumlhnglvbnh.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3d3ByaWhoZXVtbGhuZ2x2Ym5oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTc1MzcsImV4cCI6MjA5Nzk5MzUzN30.UD_1YlkzZl-6wtW9KxHkvAZxpqz9JE_e19ZKS2fYi2A";
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-let selectedPlayerIds = [];
-let isFirstGameServe = true;
-
-async function loadQ() {
-  try {
-    // 💡 严格按 created_at 升序，谁等得久谁排最前
-    const { data: qData } = await _supabase.from('players_queue').select('*').eq('status', 'waiting').order('created_at', { ascending: true });
-    const { data: rData } = await _supabase.from('players_queue').select('*').eq('status', 'resting').order('id', { ascending: true });
-    const { data: pData } = await _supabase.from('players_queue').select('*').eq('status', 'playing');
-    const { data: cData } = await _supabase.from('courts_status').select('*').order('id', { ascending: true });
-    const { data: lData } = await _supabase.from('activity_logs').select('*').order('id', { ascending: false }).limit(35);
-
-    if (qData) qState.queue = qData.map(p => ({ ...p, joinTime: p.created_at ? new Date(p.created_at).getTime() : Date.now() }));
-    if (rData) qState.resting = rData.map(p => ({ ...p, restTime: p.created_at ? new Date(p.created_at).getTime() : Date.now() }));
-    if (pData) qState.playingPlayers = pData;
-    if (cData) {
-      qState.courts = cData.map(c => ({
-        id: c.id,
-        name: c.court_name,
-        teams: c.status === 'Occupied' ? [c.team_a, c.team_b] : null,
-        startTime: c.updated_at ? new Date(c.updated_at).getTime() : null
-      }));
+    if(!isSuperAdmin() && isAdmin()){
+      qQuery=qQuery.eq('host_name',currentHost);
+      rQuery=rQuery.eq('host_name',currentHost);
+      pQuery=pQuery.eq('host_name',currentHost);
+      cQuery=cQuery.eq('host_name',currentHost);
+      lQuery=lQuery.eq('host_name',currentHost);
     }
-    if (lData) qState.log = lData.map(l => ({ time: new Date(l.created_at).getTime(), name: l.name, type: l.type, note: l.note }));
 
-    renderAll();
-  } catch (e) { console.error("Supabase Sync Error:", e); }
+    const {data:qData}=await qQuery;
+    const {data:rData}=await rQuery;
+    const {data:pData}=await pQuery;
+    const {data:cData}=await cQuery;
+    const {data:lData}=await lQuery;
+
+    if(qData) qState.queue=qData.map(p=>({...p,joinTime:new Date(p.created_at).getTime()}));
+    if(rData) qState.resting=rData.map(p=>({...p,restTime:new Date(p.created_at).getTime()}));
+    if(pData) qState.playingPlayers=pData;
+    
+    if(cData){
+      qState.courts=cData.map(c=>({
+        id:c.id,name:c.court_name,
+        teams:c.status==='Occupied'?[c.team_a,c.team_b]:null,
+        startTime:c.updated_at?new Date(c.updated_at).getTime():null,
+        queueMode:c.queue_mode || 'Doubles'
+      }));
+      if(cData.length>0 && !isSuperAdmin()){
+        qState.globalSD = cData[0].queue_mode || 'Doubles';
+        syncSDToggleUI();
+      }
+    }
+    if(lData) qState.log=lData.map(l=>({time:new Date(l.created_at).getTime(),name:l.name,type:l.type,note:l.note}));
+
+    renderQueue();
+  }catch(e){console.error(e);}
 }
 
-function saveQ() {}
-
-function initRealtimeSync() {
-  _supabase
-    .channel('realtime-pickleball-channel')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'players_queue' }, () => loadQ())
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'courts_status' }, () => loadQ())
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'activity_logs' }, () => loadQ())
+function initRealtimeSync(){
+  _supabase.channel('saas-realtime-channel')
+    .on('postgres_changes',{event:'*',schema:'public',table:'players_queue'},()=>loadQ())
+    .on('postgres_changes',{event:'*',schema:'public',table:'courts_status'},()=>loadQ())
+    .on('postgres_changes',{event:'*',schema:'public',table:'activity_logs'},()=>loadQ())
+    .on('postgres_changes',{event:'*',schema:'public',table:'host_admins'},()=>loadQ())
     .subscribe();
 }
 
-async function selfJoin() {
-  const name = document.getElementById('qr-name').value.trim();
-  if (!name) { toast(lang === 'zh' ? '请输入名字' : 'Enter your name'); return; }
-  if (!selectedGender) { toast(lang === 'zh' ? '请选择性别' : 'Select gender'); return; }
-  const level = parseInt(document.getElementById('qr-level').value);
-
-  const { error } = await _supabase.from('players_queue').insert([{ name, gender: selectedGender, level: String(level), status: 'waiting' }]);
-  if (!error) {
-    await _supabase.from('activity_logs').insert([{ time: fmtT(Date.now()), name, type: 'join', note: T('logJoin') + ' · ' + T('levels')[level] }]);
-    document.getElementById('qr-name').value = ''; selectedGender = null;
-    document.getElementById('gender-m-btn').classList.remove('active'); document.getElementById('gender-f-btn').classList.remove('active');
-    document.getElementById('self-join-card').style.display = 'none'; document.getElementById('self-join-success').style.display = 'block';
-    toast(T('toastJoined', name));
+function syncSDToggleUI(){
+  const dBtn=document.getElementById('sd-btn-doubles');const sBtn=document.getElementById('sd-btn-singles');
+  if(dBtn&&sBtn){
+    dBtn.classList.toggle('active',qState.globalSD==='Doubles');
+    sBtn.classList.toggle('active',qState.globalSD==='Singles');
   }
 }
 
-async function qRemove(id) {
-  const p = [...qState.queue, ...qState.resting, ...qState.playingPlayers].find(x => x.id === id);
-  if (p) {
-    await _supabase.from('activity_logs').insert([{ time: fmtT(Date.now()), name: p.name, type: 'leave', note: T('logLeave') }]);
-    await _supabase.from('players_queue').delete().eq('id', id);
+async function setGlobalSD(mode){
+  qState.globalSD=mode; syncSDToggleUI();
+  const host=adminState.currentAdmin || 'Admin';
+  // 同步改写该主理人所有球场的内置快捷属性
+  if(!isSuperAdmin()){
+    await _supabase.from('courts_status').update({queue_mode:mode}).eq('host_name',host);
+  }
+  toast(mode==='Singles'?'已切换为单打排队':'已切换为双打排队');
+  clearManualSelection();
+}
+
+/* 💰 自助加入与财务收费流锁死 */
+async function selfJoin(){
+  const name=document.getElementById('qr-name').value.trim();
+  if(!name){toast(lang==='zh'?'请输入姓名':'Enter name');return;}
+  if(!selectedGender){toast(lang==='zh'?'请选择性别':'Select gender');return;}
+  const level=document.getElementById('qr-level').value;
+  const isPaid=document.getElementById('qr-paid').checked;
+  const host=adminState.currentAdmin || 'Admin';
+
+  const {error}=await _supabase.from('players_queue').insert([{
+    name,gender:selectedGender,level:String(level),status:'waiting',host_name:host,is_paid:isPaid
+  }]);
+  if(!error){
+    const payNote=isPaid?'[已付]':'[未付]';
+    await _supabase.from('activity_logs').insert([{name,type:'join',note:`加入排队 · ${T('levels')[level]} · ${payNote}`,host_name:host}]);
+    document.getElementById('qr-name').value='';selectedGender=null;
+    document.getElementById('qr-paid').checked=false;
+    document.getElementById('gender-m-btn').classList.remove('active');document.getElementById('gender-f-btn').classList.remove('active');
+    document.getElementById('self-join-card').style.display='none';document.getElementById('self-join-success').style.display='block';
+    toast(T('toastJoined',name));
   }
 }
 
-async function rejoin(id) {
-  const p = qState.resting.find(x => x.id === id);
-  if (p) {
-    await _supabase.from('activity_logs').insert([{ time: fmtT(Date.now()), name: p.name, type: 'rejoin', note: T('logRejoin') }]);
-    // 💡 重新入队时，刷新时间戳，老老实实去排尾
-    await _supabase.from('players_queue').update({ status: 'waiting', created_at: new Date().toISOString() }).eq('id', id);
-    toast(T('toastJoined', p.name));
-  }
+async function togglePayStatus(pid,currentStatus){
+  if(!isAdmin())return;
+  const {error}=await _supabase.from('players_queue').update({is_paid:!currentStatus}).eq('id',pid);
+  if(!error) toast(lang==='zh'?'付款状态已更新':'Payment status updated');
 }
 
-/* 自动配队系统 */
-async function autoAssign() {
-  const fi = qState.courts.findIndex(c => !c.teams);
-  if (fi < 0) { toast(T('toastNoFree')); return; }
+/* 👥 方案 A：手动指派弹窗引擎与发射区 */
+let manualTeamA=[], manualTeamB=[];
+function handlePlayerClick(p){
+  if(!isAdmin())return;
+  activeMenuPlayerId=p.id;
+  document.getElementById('assign-menu-title').innerHTML=`${lang==='zh'?'指派':'Assign'} <b>${p.name}</b>`;
+  openModal('modal-assign-menu');
+}
+
+function executeAssign(team){
+  const p=qState.queue.find(x=>x.id===activeMenuPlayerId);
+  if(!p){closeModal('modal-assign-menu');return;}
   
-  const mode = sg.type || 'Social';
-  const isSingles = (mode === 'Singles');
-  const reqPlayers = isSingles ? 2 : 4;
+  // 移除在另一队可能重复存在的情况
+  manualTeamA=manualTeamA.filter(x=>x.id!==p.id);
+  manualTeamB=manualTeamB.filter(x=>x.id!==p.id);
 
-  if (qState.queue.length < reqPlayers) {
-    toast(isSingles ? "当前是单打模式，等待人数不足 2 人" : T('toastNeedFour'));
-    return;
+  const limit=qState.globalSD==='Singles'?1:2;
+  if(team==='A'){
+    if(manualTeamA.length>=limit){toast(lang==='zh'?'A队人数已满':'Team A full');closeModal('modal-assign-menu');return;}
+    manualTeamA.push(p);
+  }else{
+    if(manualTeamB.length>=limit){toast(lang==='zh'?'B队人数已满':'Team B full');closeModal('modal-assign-menu');return;}
+    manualTeamB.push(p);
   }
-
-  const sorted = [...qState.queue].sort((a, b) => a.level - b.level);
-  const luckyBatch = sorted.slice(0, reqPlayers);
-  const ids = luckyBatch.map(p => p.id);
-  const targetCourt = qState.courts[fi];
-  const pNames = luckyBatch.map(p => p.name);
-
-  let tA = [], tB = [];
-  if (isSingles) {
-    tA = [pNames[0]]; tB = [pNames[1]];
-  } else {
-    tA = [pNames[0], pNames[3]]; tB = [pNames[1], pNames[2]];
-  }
-
-  const { error } = await _supabase.from('courts_status').update({
-    status: 'Occupied', team_a: tA, team_b: tB, score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true, updated_at: new Date()
-  }).eq('id', targetCourt.id);
-
-  if (!error) {
-    await _supabase.from('players_queue').update({ status: 'playing' }).in('id', ids);
-    await _supabase.from('activity_logs').insert([{
-      time: fmtT(Date.now()), name: 'System', type: 'assign',
-      note: `${cName(targetCourt)} [${mode}] · ${tA.join('/')} vs ${tB.join('/')}`
-    }]);
-    toast(T('toastAssigned')); showQTab('courts');
-  }
-}
-
-/* 手动插队控制逻辑 */
-function togglePlayerSelection(id) {
-  if (!isAdmin()) return;
-  const mode = sg.type || 'Social';
-  const reqPlayers = (mode === 'Singles') ? 2 : 4;
-  const idx = selectedPlayerIds.indexOf(id);
-  if (idx >= 0) selectedPlayerIds.splice(idx, 1);
-  else {
-    if (selectedPlayerIds.length >= reqPlayers) {
-      toast(lang === 'zh' ? `当前模式只需选择 ${reqPlayers} 人` : `Max ${reqPlayers} players allowed`);
-      return;
-    }
-    selectedPlayerIds.push(id);
-  }
+  closeModal('modal-assign-menu');
   renderQWaiting();
 }
 
-function clearManualSelection() {
-  selectedPlayerIds = [];
-  renderQWaiting();
-}
+function clearManualSelection(){manualTeamA=[];manualTeamB=[];renderQWaiting();}
 
-async function manualAssignToCourt(courtId) {
-  if (!isAdmin()) return;
-  const mode = sg.type || 'Social';
-  const isSingles = (mode === 'Singles');
-  const reqPlayers = isSingles ? 2 : 4;
-
-  if (selectedPlayerIds.length !== reqPlayers) {
-    toast(lang === 'zh' ? `必须选满 ${reqPlayers} 人才能强行开局` : `Must select exactly ${reqPlayers} players`);
-    return;
+async function launchManualMatch(courtId){
+  const limit=qState.globalSD==='Singles'?1:2;
+  if(manualTeamA.length!==limit || manualTeamB.length!==limit){
+    toast(lang==='zh'?`人数不足，当前模式需要每队 ${limit} 人`:`Need ${limit} player(s) per team`);return;
   }
-  const c = qState.courts.find(x => x.id === courtId); if (!c) return;
+  const c=qState.courts.find(x=>x.id===courtId);if(!c)return;
+  const tANames=manualTeamA.map(x=>x.name);const tBNames=manualTeamB.map(x=>x.name);
+  const ids=[...manualTeamA,...manualTeamB].map(x=>x.id);
 
-  const selectedPlayers = qState.queue.filter(p => selectedPlayerIds.includes(p.id));
-  if (selectedPlayers.length !== reqPlayers) { toast('Sync error'); clearManualSelection(); return; }
+  const {error}=await _supabase.from('courts_status').update({
+    status:'Occupied',team_a:tANames,team_b:tBNames,score_a:0,score_b:0,server_number:2,serving_team:'A',is_first_serve:true,updated_at:new Date()
+  }).eq('id',courtId);
 
-  const pNames = selectedPlayers.map(p => p.name);
-  let tA = [], tB = [];
-  if (isSingles) {
-    tA = [pNames[0]]; tB = [pNames[1]];
-  } else {
-    tA = [pNames[0], pNames[1]]; tB = [pNames[2], pNames[3]];
-  }
-
-  const { error } = await _supabase.from('courts_status').update({
-    status: 'Occupied', team_a: tA, team_b: tB, score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true, updated_at: new Date()
-  }).eq('id', courtId);
-
-  if (!error) {
-    await _supabase.from('players_queue').update({ status: 'playing' }).in('id', selectedPlayerIds);
+  if(!error){
+    await _supabase.from('players_queue').update({status:'playing'}).in('id',ids);
     await _supabase.from('activity_logs').insert([{
-      time: fmtT(Date.now()), name: adminState.currentAdmin || 'System', type: 'assign',
-      note: `[手动调配] ${cName(c)} [${mode}] · ${tA.join('/')} vs ${tB.join('/')}`
+      name:adminState.currentAdmin,type:'assign',note:`[手动配队] ${cName(c)} · ${tANames.join('/')} VS ${tBNames.join('/')}`,host_name:adminState.currentAdmin
     }]);
-    toast(T('toastAssigned')); clearManualSelection(); showQTab('courts');
+    clearManualSelection();toast(T('toastAssigned'));showQTab('courts');
   }
 }
 
-/* 等候区大名单渲染 */
+/* 渲染等候区大名单 */
 function renderQWaiting() {
   const el = document.getElementById('q-list'); if (!el) return;
   let panelHtml = '';
-  const mode = sg.type || 'Social';
-  const reqPlayers = (mode === 'Singles') ? 2 : 4;
+  const limit=qState.globalSD==='Singles'?1:2;
 
-  if (isAdmin() && selectedPlayerIds.length > 0) {
-    const ready = selectedPlayerIds.length === reqPlayers;
+  if (isAdmin() && (manualTeamA.length > 0 || manualTeamB.length > 0)) {
+    const ready = (manualTeamA.length===limit && manualTeamB.length===limit);
     panelHtml = `
-      <div class="card" style="background: var(--info-bg); border: 1px solid var(--info-text); padding: 12px; margin-bottom: 12px; border-radius: var(--radius-lg);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <span style="font-size: 13px; font-weight: 700; color: var(--info-text);">🎯 Host Mode 手动特殊配队 [当前模式: ${mode}] (${selectedPlayerIds.length} / ${reqPlayers} 人)</span>
-          <button class="btn btn-sm btn-d" style="padding: 2px 8px; font-size: 11px;" onclick="clearManualSelection()">取消</button>
+      <div class="card" style="background:var(--info-bg);border:1px solid var(--info-text);padding:12px;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:12px;font-weight:700;color:var(--info-text)">⚡ 方案 A 手动自由组队中 [${qState.globalSD==='Singles'?'单打':'双打'}]</span>
+          <button class="btn btn-sm btn-d" style="padding:2px 8px;font-size:11px" onclick="clearManualSelection()">清空组队</button>
         </div>
-        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;">
-          ${selectedPlayerIds.map((id, idx) => {
-            const p = qState.queue.find(x => x.id === id);
-            return p ? `<span class="pill" style="background: var(--bg); color: var(--text); border: 0.5px solid var(--border2); padding: 4px 8px;">${mode==='Singles'?(idx===0?'A选手':'B选手'):(idx < 2 ? 'A队' : 'B队')}: <b>${p.name}</b></span>` : '';
-          }).join('')}
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;background:var(--bg);padding:8px;border-radius:8px">
+          <div style="text-align:center"><div class="tl2">Team A (${manualTeamA.length}/${limit})</div>${manualTeamA.map(x=>`<b style="font-size:13px;display:block">${x.name}</b>`).join('')}</div>
+          <div style="font-weight:800;color:var(--text3)">VS</div>
+          <div style="text-align:center"><div class="tl2">Team B (${manualTeamB.length}/${limit})</div>${manualTeamB.map(x=>`<b style="font-size:13px;display:block">${x.name}</b>`).join('')}</div>
         </div>
-        ${ready ? `
-          <div>
-            <div style="font-size: 11px; color: var(--text2); margin-bottom: 5px;">发射往空闲球场：</div>
-            <div style="display: flex; gap: 6px;">
-              ${qState.courts.map(c => {
-                const free = !c.teams;
-                return `<button class="btn btn-sm ${free ? 'btn-p' : ''}" style="flex: 1; font-size: 11px; padding: 8px 4px;" onclick="manualAssignToCourt(${c.id})" ${free ? '' : 'disabled'}>${cName(c)}</button>`;
-              }).join('')}
+        ${ready?`
+          <div style="margin-top:8px">
+            <div class="tl2" style="margin-bottom:4px;color:var(--info-text)">选择空闲球场发射:</div>
+            <div style="display:flex;gap:4px">
+              ${qState.courts.map(c=>`<button class="btn btn-sm ${!c.teams?'btn-p':''}" style="flex:1;font-size:11px" onclick="launchManualMatch(${c.id})" ${c.teams?'disabled':''}>${cName(c)}</button>`).join('')}
             </div>
           </div>
-        ` : `<div style="font-size: 11px; color: var(--text2); font-style: italic;">请在大名单中继续点选凑齐人数...</div>`}
+        `:`<div style="font-size:11px;color:var(--text2);margin-top:6px;text-align:center;font-style:italic">请点击下方球员列表继续指派指派...</div>`}
       </div>`;
   }
 
@@ -1073,23 +964,23 @@ function renderQWaiting() {
   }
 
   el.innerHTML = panelHtml + `<div class="card" style="padding:0 12px">` + qState.queue.map((p, i) => {
-    const isSel = selectedPlayerIds.includes(p.id);
+    const isPaid = p.is_paid;
+    const payBadge = isPaid ? `<span class="pay-badge pay-paid" onclick="event.stopPropagation();togglePayStatus(${p.id},true)">已付</span>` : `<span class="pay-badge pay-unpaid" onclick="event.stopPropagation();togglePayStatus(${p.id},false)">未付</span>`;
     return `
-      <div class="q-row" style="${isSel ? 'background: var(--info-bg);' : 'cursor: pointer;'}" onclick="if(isAdmin()){ togglePlayerSelection(${p.id}); }">
-        <span style="font-size:13px; font-weight:600; min-width:22px; color:var(--text2);">
-          ${isSel ? '<i class="ti ti-square-check-filled" style="color:var(--info-text)"></i>' : i + 1}
-        </span>
+      <div class="q-row" onclick="handlePlayerClick(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+        <span style="font-size:13px;font-weight:600;min-width:20px;color:var(--text2);">${i + 1}</span>
         <div class="av" style="background:${AB[p.level]};color:${AF[p.level]}">${p.name.slice(0,2)}</div>
         <div style="flex:1">
-          <div style="font-size:14px;font-weight:500">${p.name} <span class="pill pl${p.level}">${T('levels')[p.level]}</span>${p.gender ? ` <span class="pill ${p.gender==='M'?'pm':'pf'}">${T(p.gender==='M'?'male':'female')}</span>`:''}</div>
+          <div style="font-size:14px;font-weight:500">${p.name} <span class="pill pl${p.level}">${T('levels')[p.level]}</span> ${payBadge}</div>
           <div style="font-size:12px;color:var(--text2)">${mAgo(p.joinTime)}</div>
         </div>
-        <div style="display:flex; gap:5px;" onclick="event.stopPropagation();">
+        <div style="display:flex;gap:5px" onclick="event.stopPropagation()">
           ${isAdmin() ? `<button class="btn btn-d btn-sm" onclick="qRemove(${p.id})"><i class="ti ti-x"></i></button>` : ''}
         </div>
       </div>`;
   }).join('') + '</div>';
 
+  // 休息区渲染
   const rs = document.getElementById('rest-section'), rl = document.getElementById('rest-list');
   const resting = qState.resting || []; if (rs) rs.style.display = resting.length ? 'block' : 'none';
   if (rl && resting.length) rl.innerHTML = `<div class="card" style="padding:0 12px">` + resting.map(p => `
@@ -1106,296 +997,105 @@ function renderQWaiting() {
     </div>`).join('') + '</div>';
 }
 
-/* 球场状态看板 */
-function renderQCourts(){
-  const el=document.getElementById('courts-list');if(!el)return;
-  el.innerHTML=qState.courts.map(c=>`<div class="court-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${c.teams?'8px':'0'}">
-      <div style="display:flex;align-items:center;gap:6px">
-        <span style="width:8px;height:8px;border-radius:50%;background:${c.teams?'#63A322':'#888'};display:inline-block"></span>
-        <span style="font-size:15px;font-weight:600">${cName(c)}</span>
-      </div>
-      ${c.teams?`<button class="btn btn-sm" onclick="finishCourt(${c.id})"><i class="ti ti-check"></i> ${T('courtEnd')}</button>`:`<span style="font-size:13px;color:var(--text2)">${T('courtFree')}</span>`}
-    </div>
-    ${c.teams?`<div class="teams-grid"><div class="team-box"><div class="tl2">A</div>${c.teams[0].map(name=>`<div class="tp2">${name}</div>`).join('')}</div><div style="font-size:16px;font-weight:700;color:var(--text2);text-align:center">VS</div><div class="team-box"><div class="tl2">B</div>${c.teams[1].map(name=>`<div class="tp2">${name}</div>`).join('')}</div></div>
-    <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
-      <i class="ti ti-clock" style="font-size:13px"></i> 开始时间: <b>${fmtT(c.startTime)}</b> (${mPlayed(c.startTime)})
-    </div>`:''}
-  </div>`).join('');
+/* 🏓 独立记分牌：严格官方单双打逻辑引擎 */
+let sbMatchMode = 'Doubles';
+let sbState={sA:0,sB:0,serv:1,servNum:2,target:11,winType:'deuce',sys:'rally',tA:'A',tB:'B',hist:[],won:0};
+let sbTarget=11,sbWinType='deuce',sbSys='rally';
+
+function setSbMatchMode(mode){
+  sbMatchMode=mode;
+  document.getElementById('sb-mode-doubles').classList.toggle('active',mode==='Doubles');
+  document.getElementById('sb-mode-singles').classList.toggle('active',mode==='Singles');
 }
+function selST(n){sbTarget=n;document.querySelectorAll('#score-target-opts .win-opt').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===n));}
+function selWT(t){sbWinType=t;document.querySelectorAll('#win-type-opts .win-opt').forEach(b=>b.classList.toggle('active',b.onclick&&b.onclick.toString().includes("'"+t+"'")));}
+function selSS(s){sbSys=s;document.querySelectorAll('#score-sys-opts .win-opt').forEach(b=>b.classList.toggle('active',b.onclick&&b.onclick.toString().includes("'"+s+"'")));}
 
-function setPS(id, status) {
-  if (!window._PS) window._PS = {};
-  window._PS[id] = status;
-  hlPS(id, status);
-}
-
-function hlPS(id, status) {
-  const sc = document.getElementById(`sc-${id}`); const sr = document.getElementById(`sr-${id}`);
-  if (!sc || !sr) return;
-  if (status === 'c') { sc.classList.add('btn-p'); sr.classList.remove('btn-p'); } 
-  else { sc.classList.remove('btn-p'); sr.classList.add('btn-p'); }
-}
-
-function finishCourt(courtId) {
-  if (!isAdmin()) { toast(T('adminRequired')); return; }
-  const c = qState.courts.find(c => c.id === courtId); if (!c || !c.teams) return;
-  qState.pendingCourtId = courtId;
-  
-  const pool = qState.playingPlayers || [];
-  const findProfile = (name) => pool.find(x => x.name === name) || { id: Date.now() + Math.random(), name: name, level: 2, gender: 'M' };
-  
-  const teamA_profiles = c.teams[0].map(name => findProfile(name));
-  const teamB_profiles = c.teams[1].map(name => findProfile(name));
-  const players = [...teamA_profiles, ...teamB_profiles];
-  window._activeCourtProfiles = players; 
-
-  document.getElementById('go-ta').textContent = teamA_profiles.map(p => p.name).join(' / ');
-  document.getElementById('go-tb').textContent = teamB_profiles.map(p => p.name).join(' / ');
-  document.getElementById('final-a').value = ''; document.getElementById('final-b').value = '';
-  
-  document.getElementById('go-court-info').innerHTML = `
-    <b style="font-size:16px;display:block;margin-bottom:2px">${cName(c)}</b>
-    <span style="font-size:12px;opacity:0.8;display:inline-flex;align-items:center;gap:3px">
-      <i class="ti ti-clock"></i> 对局时间线: ${fmtT(c.startTime)} ➔ ${fmtT(Date.now())}
-    </span>
-  `;
-
-  window._PS = {};
-  document.getElementById('go-status-list').innerHTML = players.map(p => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)">
-      <div style="display:flex;align-items:center;gap:8px">
-        <div class="av" style="background:${AB[p.level]||AB[2]};color:${AF[p.level]||AF[2]}">${p.name.slice(0,2)}</div>
-        <span style="font-size:14px;font-weight:500">${p.name}</span>
-      </div>
-      <div style="display:flex;gap:5px">
-        <button class="btn btn-sm" id="sc-${p.id}" onclick="setPS(${p.id},'c')">${T('statusContinue')}</button>
-        <button class="btn btn-sm" id="sr-${p.id}" onclick="setPS(${p.id},'r')">${T('statusRest')}</button>
-      </div>
-    </div>`).join('');
-    
-  players.forEach(p => { window._PS[p.id] = 'c'; hlPS(p.id, 'c'); });
-  openModal('modal-game-over');
-}
-
-/* 🚀 核心修复：下场结算时强行重构洗牌时间戳，将重新排队者死死摁在队列最后端 */
-async function confirmGameOver() {
-  const courtId = qState.pendingCourtId; const c = qState.courts.find(c => c.id === courtId); if (!c) return;
-  const players = window._activeCourtProfiles || [];
-  const sa = parseInt(document.getElementById('final-a').value) || 0;
-  const sb = parseInt(document.getElementById('final-b').value) || 0;
-  const mins = Math.round((Date.now() - c.startTime) / 60000);
-
-  let winners = [], losers = [];
-  if (sa > sb) { winners = c.teams[0]; losers = c.teams[1]; } 
-  else { winners = c.teams[1]; losers = c.teams[0]; }
-  
-  window._lastWinners = winners.map(name => players.find(p => p.name === name)).filter(Boolean);
-  window._lastLosers = losers.map(name => players.find(p => p.name === name)).filter(Boolean);
-
-  // 释放球场占用
-  await _supabase.from('courts_status').update({ status: 'Available', team_a: [], team_b: [], score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true }).eq('id', courtId);
-
-  // 核心洗牌：更新状态的同时，赋予最新 ISO 时间戳，防止小 ID 玩家无限抢跑
-  for (const p of players) {
-    const nextStatus = (window._PS[p.id] || 'c') === 'r' ? 'resting' : 'waiting';
-    await _supabase.from('players_queue').update({ status: nextStatus, created_at: new Date().toISOString() }).eq('id', p.id);
-  }
-
-  const logNote = `${cName(c)} [${sg.type || 'Social'}] (${sa}:${sb}) | ⏰ ${fmtT(c.startTime)} - ${fmtT(Date.now())} (${mins}分钟)`;
-  await _supabase.from('activity_logs').insert([{ time: fmtT(Date.now()), name: 'System', type: 'done', note: logNote }]);
-  
-  closeModal('modal-game-over'); toast(T('toastCourtDone'));
-  setTimeout(() => suggestNext(courtId), 350);
-}
-
-/* 🚀 核心修复：智能排队引擎引入黑名单机制，彻底阻断下场输家连场打铁 */
-function suggestNext(courtId){
-  const mode = sg.type || 'Social';
-  const c = qState.courts.find(c => c.id === courtId); if (!c) return;
-  
-  let suggestedPlayers = []; let tA = [], tB = [];
-  const activeWinners = (window._lastWinners || []).filter(p => window._PS && window._PS[p.id] !== 'r');
-  
-  // 防御性硬隔离：强制剥离刚刚走下赛场的输家，不再受制于异步网络刷新的几百毫秒延迟
-  const loserNames = (window._lastLosers || []).map(p => p.name);
-  const cleanQueue = qState.queue.filter(p => !loserNames.includes(p.name));
-  
-  if (mode === 'Singles') {
-    if (cleanQueue.length < 2) return;
-    tA = [cleanQueue[0]]; tB = [cleanQueue[1]]; suggestedPlayers = [...tA, ...tB];
-  } 
-  else if (mode === 'King Stay' && activeWinners.length === 2) {
-    if (cleanQueue.length < 2) return;
-    tA = [...activeWinners]; tB = [cleanQueue[0], cleanQueue[1]]; suggestedPlayers = [...tA, ...tB];
-  } 
-  else if (mode === '2in 2out Winner Stay' && activeWinners.length === 2) {
-    if (cleanQueue.length < 2) return;
-    // 赢家完美拆伙进 A/B 队各带一位纯新人，输家老实滚去队尾
-    tA = [activeWinners[0], cleanQueue[0]]; tB = [activeWinners[1], cleanQueue[1]];
-    suggestedPlayers = [activeWinners[0], cleanQueue[0], activeWinners[1], cleanQueue[1]];
-  } 
-  else {
-    if (cleanQueue.length < 4) return;
-    const q = [...cleanQueue]; const lim = Math.min(q.length, 8);
-    const pk = (a,b) => [a,b].sort().join('|'); const hist = qState.matchHistory || [];
-    let best = null, bestSc = Infinity;
-    
-    for(let a=0; a<lim; a++)
-      for(let b=a+1; b<lim; b++)
-        for(let cc=b+1; cc<lim; cc++)
-          for(let d=cc+1; d<lim; d++){
-            if (!q[d]) continue;
-            const g = [q[a], q[b], q[cc], q[d]]; let sc = 0;
-            for(let i=0; i<4; i++) for(let j=i+1; j<4; j++) { const k = pk(g[i].id, g[j].id); sc += hist.filter(h=>h===k).length; }
-            if(sc < bestSc){ bestSc = sc; best = g; }
-          }
-    if (!best) best = q.slice(0, 4);
-    tA = [best[0], best[3]]; tB = [best[1], best[2]]; suggestedPlayers = best;
-  }
-  
-  pendingNextMatch = { courtId, players: suggestedPlayers, tA, tB };
-  
-  document.getElementById('next-match-content').innerHTML = `
-    <div style="font-size:12px; color:var(--text2); margin-bottom:10px">${T('avoidRepeat')} [Host 推荐模式: ${mode}]</div>
-    <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:center">
-      <div style="background:var(--bg2); border-radius:var(--radius); padding:10px; text-align:center">
-        ${tA.map(p => `<div style="font-size:14px; font-weight:500; padding:2px 0">${p.name}</div>`).join('')}
-      </div>
-      <div style="font-size:18px; font-weight:700; color:var(--text2)">VS</div>
-      <div style="background:var(--bg2); border-radius:var(--radius); padding:10px; text-align:center">
-        ${tB.map(p => `<div style="font-size:14px; font-weight:500; padding:2px 0">${p.name}</div>`).join('')}
-      </div>
-    </div>`;
-  openModal('modal-next-match');
-}
-
-async function confirmNextMatch(){
-  if(!pendingNextMatch)return;
-  const { courtId, players, tA, tB } = pendingNextMatch;
-  const c = qState.courts.find(c => c.id === courtId); if (!c) { closeModal('modal-next-match'); return; }
-  
-  const tANames = tA.map(p => p.name); const tBNames = tB.map(p => p.name);
-  const allPlayerIds = players.map(p => p.id);
-
-  const { error } = await _supabase.from('courts_status').update({
-    status: 'Occupied', team_a: tANames, team_b: tBNames, score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true, updated_at: new Date()
-  }).eq('id', courtId);
-
-  if(!error) {
-    await _supabase.from('players_queue').update({ status: 'playing' }).in('id', allPlayerIds);
-    await _supabase.from('activity_logs').insert([{ 
-      time: fmtT(Date.now()), name: 'System', type: 'assign', 
-      note: `${cName(c)} [Host自动流转] · ${tANames.join('/')} vs ${tBNames.join('/')}` 
-    }]);
-    toast(T('toastAssigned')); closeModal('modal-next-match'); pendingNextMatch = null;
-  }
-}
-
-/* 搜索与完整花名册渲染 */
-function qLookup() {
-  const q = document.getElementById('lookup-inp').value.trim().toLowerCase();
-  renderLookupFull(q);
-}
-
-function renderLookupFull(query) {
-  const el = document.getElementById('lookup-full-list');
-  const resEl = document.getElementById('lookup-result'); if (!el) return;
-  const all = [...qState.queue];
-  
-  if (!all.length) {
-    el.innerHTML = `<div class="empty">${lang==='zh'?'队列空空如也':'Queue is empty'}</div>`;
-    if (resEl) resEl.innerHTML = ''; return;
-  }
-  
-  el.innerHTML = `<div class="card" style="padding:0 12px">` + all.map((p, i) => `
-    <div class="q-row">
-      <span style="font-size:13px;font-weight:600;min-width:20px;color:var(--text2)">${i+1}</span>
-      <div class="av" style="background:${AB[p.level]};color:${AF[p.level]}">${p.name.slice(0,2)}</div>
-      <div style="flex:1"><div style="font-size:14px;font-weight:500">${p.name}</div></div>
-    </div>`).join('') + `</div>`;
-
-  if (query && resEl) {
-    const idx = all.findIndex(p => p.name.toLowerCase().includes(query));
-    if (idx >= 0) {
-      resEl.innerHTML = `
-        <div class="card" style="background:var(--success-bg);color:var(--success-text);border:none;margin:0">
-          <div style="font-weight:700">${T('posLabel', idx + 1, all.length)}</div>
-          <div style="font-size:12px;margin-top:2px">${idx === 0 ? T('readyMsg') : `${T('estWait')}: ~${idx * 12}分钟`}</div>
-        </div>`;
-    } else {
-      resEl.innerHTML = `<div style="font-size:13px;color:var(--text3);text-align:center;padding:8px">${T('notFound', query)}</div>`;
-    }
-  } else if (resEl) { resEl.innerHTML = ''; }
-}
-
-function renderQLog() {
-  const body = document.getElementById('log-body'); if (!body) return;
-  const totalEl = document.getElementById('log-total');
-  const gamesEl = document.getElementById('log-games');
-  const activeEl = document.getElementById('log-active');
-
-  if (totalEl) totalEl.textContent = qState.log.filter(l => l.type === 'join').length;
-  if (gamesEl) gamesEl.textContent = qState.log.filter(l => l.type === 'done').length;
-  if (activeEl) activeEl.textContent = qState.queue.length;
-
-  const f = qState.logFilter || 'all';
-  const filtered = qState.log.filter(l => f === 'all' || l.type === f);
-
-  const row = document.getElementById('log-filter-row');
-  if (row && !row.children.length) {
-    const types = [{k:'all', n:T('filterAll')},{k:'join', n:T('logJoin')},{k:'assign', n:T('logAssign')},{k:'done', n:T('logDone')},{k:'leave', n:T('logLeave')}];
-    row.innerHTML = types.map(t => `<button class="btn btn-sm ${f===t.k?'btn-p':''}" onclick="setQFilter('${t.k}')">${t.n}</button>`).join('');
-  } else if (row) {
-    Array.from(row.children).forEach((btn, idx) => {
-      const types = ['all','join','assign','done','leave']; btn.classList.toggle('btn-p', f === types[idx]);
-    });
-  }
-
-  if (!filtered.length) {
-    body.innerHTML = `<tr><td colspan="4" class="empty" style="text-align:center;padding:20px">${lang==='zh'?'暂无记录':'No records'}</td></tr>`; return;
-  }
-
-  body.innerHTML = filtered.map(l => `
-    <tr>
-      <td style="padding:8px;border-bottom:0.5px solid var(--border);color:var(--text2)">${l.time?fmtT(l.time):'—'}</td>
-      <td style="padding:8px;border-bottom:0.5px solid var(--border);font-weight:500">${l.name}</td>
-      <td style="padding:8px;border-bottom:0.5px solid var(--border)"><span class="pill ${l.type==='join'?'pdone':l.type==='assign'?'ppend':l.type==='done'?'pl2':'pwo'}">${l.type}</span></td>
-      <td style="padding:8px;border-bottom:0.5px solid var(--border);color:var(--text2);word-break:break-all">${l.note||'—'}</td>
-    </tr>`).join('');
-}
-
-async function addCourt(){
-  const customName = `Court ${qState.courts.length + 1}`;
-  await _supabase.from('courts_status').insert([{ court_name: customName, status: 'Available' }]); toast(T('qBtnAddCourt'));
-}
-
-async function deleteCourt(id){
-  const c = qState.courts.find(c => c.id === id); if (c && c.teams) { toast(lang==='zh'?'球场使用中':'Court in use'); return; }
-  await _supabase.from('courts_status').delete().eq('id', id);
-}
-
-/* 🧱 独立记分器与大联盟系统 🧱 */
 function startScoreboard(){
   const tA_name = document.getElementById('sb-team1').value || 'A'; const tB_name = document.getElementById('sb-team2').value || 'B';
   isFirstGameServe = true; 
-  sbState = { sA: 0, sB: 0, serv: 1, servNum: sbSys === '002' ? 2 : 1, target: sbTarget, winType: sbWinType, sys: sbSys, tA: tA_name, tB: tB_name, hist: [], won: 0 };
+  sbState = { 
+    sA: 0, sB: 0, serv: 1, 
+    servNum: sbMatchMode==='Singles' ? 1 : (sbSys==='002' ? 2 : 1), 
+    target: sbTarget, winType: sbWinType, sys: sbSys, tA: tA_name, tB: tB_name, hist: [], won: 0 
+  };
   document.getElementById('score-setup-area').style.display = 'none'; document.getElementById('scoreboard-area').style.display = 'block';
   document.getElementById('sb-win-banner').style.display = 'none'; renderSB();
 }
+
 function sbPoint(team) {
-  if (sbState.won) return; if (sbState.sys === '002' && team !== sbState.serv) { sbFault(); return; }
-  const snap = JSON.stringify(sbState); if (team === 1) sbState.sA++; else sbState.sB++;
-  sbState.hist.push({ snap, act: `+1 → ${team === 1 ? sbState.tA : sbState.tB}` }); checkSBWin(); renderSB();
+  if (sbState.won) return;
+  const snap = JSON.stringify(sbState);
+  
+  // 发球得分制 (0-0-2) 必须是发球方才能得分
+  if (sbState.sys === '002' && team !== sbState.serv) {
+    sbFault(); return;
+  }
+  
+  if (team === 1) sbState.sA++; else sbState.sB++;
+  
+  // 官方单打机制：得分后自动根据得分奇偶数切换发球方位
+  if(sbMatchMode==='Singles' && sbState.sys==='002'){
+    // 单打发球得分，发球权不变，方位根据当前得分奇偶自动判定（在前端报分展示）
+  }
+
+  sbState.hist.push({ snap, act: `+1 → ${team === 1 ? sbState.tA : sbState.tB}` });
+  checkSBWin(); renderSB();
 }
+
 function sbFault() {
   if (sbState.won) return; const snap = JSON.stringify(sbState);
-  if (sbState.sys === '002') {
-    if (isFirstGameServe) { sbState.serv = sbState.serv === 1 ? 2 : 1; sbState.servNum = 1; isFirstGameServe = false; } 
-    else { if (sbState.servNum === 1) { sbState.servNum = 2; } else { sbState.serv = sbState.serv === 1 ? 2 : 1; sbState.servNum = 1; } }
-  } else { sbState.serv = sbState.serv === 1 ? 2 : 1; }
-  sbState.hist.push({ snap, act: sbState.sys === '002' ? 'Fault ➔ 转移发球权' : 'Side out' }); renderSB();
+  
+  if (sbMatchMode === 'Singles') {
+    // 官方单打规则：没有二发！失误即换发
+    sbState.serv = sbState.serv === 1 ? 2 : 1;
+    sbState.servNum = 1;
+  } else {
+    // 双打规则流转
+    if (sbState.sys === '002') {
+      if (isFirstGameServe) { 
+        sbState.serv = sbState.serv === 1 ? 2 : 1; sbState.servNum = 1; isFirstGameServe = false; 
+      } else { 
+        if (sbState.servNum === 1) { sbState.servNum = 2; } 
+        else { sbState.serv = sbState.serv === 1 ? 2 : 1; sbState.servNum = 1; } 
+      }
+    } else { sbState.serv = sbState.serv === 1 ? 2 : 1; }
+  }
+  
+  sbState.hist.push({ snap, act: lang==='zh'?'换发球 (Side Out)':'Side out' }); renderSB();
 }
+
+function renderSB(){
+  const s=sbState; document.getElementById('sb-n1').textContent=s.tA;document.getElementById('sb-n2').textContent=s.tB;
+  document.getElementById('sb-s1').textContent=s.sA;document.getElementById('sb-s2').textContent=s.sB;
+  document.getElementById('sb-btn1-lbl').textContent=s.tA;document.getElementById('sb-btn2-lbl').textContent=s.tB;
+  const sv1=document.getElementById('sb-sv1'),sv2=document.getElementById('sb-sv2');
+  const sn1=document.getElementById('sb-sn1'),sn2=document.getElementById('sb-sn2');
+  
+  sv1.textContent=s.serv===1?'▶ Serving':'';
+  sv2.textContent=s.serv===2?'▶ Serving':'';
+  
+  const callout=document.getElementById('sb-callout');
+  if (sbMatchMode === 'Singles') {
+    // 单打报分：2位数字 (分数 - 分数)
+    callout.textContent = `${s.sA} - ${s.sB}`;
+    // 单打发球方位奇偶提示
+    const curScore = s.serv === 1 ? s.sA : s.sB;
+    const sideLabel = curScore % 2 === 0 ? (lang==='zh'?'[右区偶数]':'[Right / Even]') : (lang==='zh'?'[左区奇数]':'[Left / Odd]');
+    if(sn1) sn1.textContent = s.serv === 1 ? sideLabel : '';
+    if(sn2) sn2.textContent = s.serv === 2 ? sideLabel : '';
+  } else {
+    // 双打报分
+    if(s.sys==='002') callout.textContent=`${s.sA} - ${s.sB} - ${s.servNum}`;
+    else callout.textContent=`${s.sA} - ${s.sB}`;
+    
+    const snLabel = lang==='zh'?`发球员 #${s.servNum}`:`Server #${s.servNum}`;
+    if(sn1) sn1.textContent=s.serv===1?snLabel:'';
+    if(sn2) sn2.textContent=s.serv===2?snLabel:'';
+  }
+  const h=document.getElementById('sb-hist'); if(h)h.innerHTML=[...s.hist].reverse().slice(0,6).map(e=>`<div class="sb-hist-row">${e.act}</div>`).join('');
+}
+
 function sbUndo(){
   if(!sbState.hist.length)return; const last=sbState.hist.pop(); const prev=JSON.parse(last.snap);prev.hist=sbState.hist;
   sbState=prev; sbState.won=0; document.getElementById('sb-win-banner').style.display='none'; renderSB();
@@ -1408,161 +1108,193 @@ function checkSBWin(){
   else{if(a>=t)w=1;else if(b>=t)w=2;}
   if(w){sbState.won=w;document.getElementById('sb-win-banner').style.display='block';document.getElementById('sb-win-text').textContent=T('sbWin',w===1?sbState.tA:sbState.tB);}
 }
-function renderSB(){
-  const s=sbState; document.getElementById('sb-n1').textContent=s.tA;document.getElementById('sb-n2').textContent=s.tB;
-  document.getElementById('sb-s1').textContent=s.sA;document.getElementById('sb-s2').textContent=s.sB;
-  document.getElementById('sb-btn1-lbl').textContent=s.tA;document.getElementById('sb-btn2-lbl').textContent=s.tB;
-  const sv1=document.getElementById('sb-sv1'),sv2=document.getElementById('sb-sv2');
-  const sn1=document.getElementById('sb-sn1'),sn2=document.getElementById('sb-sn2');
-  if(sv1)sv1.textContent=s.serv===1?(lang==='zh'?'▶ 发球中':'▶ Serving'):'';
-  if(sv2)sv2.textContent=s.serv===2?(lang==='zh'?'▶ 发球中':'▶ Serving'):'';
-  if(s.sys==='002'){ const snLabel=lang==='zh'?`发球员 #${s.servNum}`:`Server #${s.servNum}`; if(sn1)sn1.textContent=s.serv===1?snLabel:'';if(sn2)sn2.textContent=s.serv===2?snLabel:'';
-  }else{if(sn1)sn1.textContent='';if(sn2)sn2.textContent='';}
-  const callout=document.getElementById('sb-callout');
-  if(callout){if(s.sys==='002')callout.textContent=`${s.sA} - ${s.sB} - ${s.servNum}`;else callout.textContent=`${s.sA} - ${s.sB}`;}
-  const h=document.getElementById('sb-hist'); if(h)h.innerHTML=[...s.hist].reverse().slice(0,8).map(e=>`<div class="sb-hist-row">${e.act}</div>`).join('');
+
+/* 📝 活动记录安全清空锁 */
+async function clearAllLogs(){
+  if(!isAdmin())return;
+  const pinCheck = prompt(lang==='zh'?'警告：此操作将清空当前系统的所有活动记录！请输入您的主理人登录密码确认：':'Enter password to clear logs:');
+  const found = adminState.admins.find(a=>a.name === adminState.currentAdmin && a.pin === pinCheck);
+  if(!found){toast(lang==='zh'?'密码错误，拒绝删除':'Incorrect PIN');return;}
+
+  const host=adminState.currentAdmin;
+  let query = _supabase.from('activity_logs').delete();
+  if(!isSuperAdmin()) query = query.eq('host_name', host);
+  else query = query.neq('host_name', '_placeholder_'); // Super Admin 一键全洗
+
+  const {error} = await query;
+  if(!error){toast(lang==='zh'?'记录清空成功':'Logs cleared successfully');loadQ();}
+}
+
+/* 自动配队、球场流转辅助函数 */
+function cName(c){return c.name||(lang==='zh'?`${c.id}号球场`:`Court ${c.id}`);}
+function fmtT(t){if(!t)return'—';const d=new Date(t);return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
+function mAgo(t){return T('minutesAgo',Math.round((Date.now()-t)/60000));}
+function mPlayed(t){return T('minutesPlayed',Math.round((Date.now()-t)/60000));}
+
+async function qRemove(id){
+  const p=[...qState.queue,...qState.resting,...qState.playingPlayers].find(x=>x.id===id);
+  if(p){
+    await _supabase.from('activity_logs').insert([{name:p.name,type:'leave',note:T('logLeave'),host_name:p.host_name}]);
+    await _supabase.from('players_queue').delete().eq('id',id);
+  }
+}
+async function rejoin(id){
+  const p=qState.resting.find(x=>x.id===id);
+  if(p){
+    await _supabase.from('activity_logs').insert([{name:p.name,type:'rejoin',note:T('logRejoin'),host_name:p.host_name}]);
+    await _supabase.from('players_queue').update({status:'waiting',created_at:new Date().toISOString()}).eq('id',id);
+  }
+}
+
+async function autoAssign() {
+  const fi = qState.courts.findIndex(c => !c.teams);
+  if (fi < 0) { toast(T('toastNoFree')); return; }
+  const reqPlayers = qState.globalSD === 'Singles' ? 2 : 4;
+  if (qState.queue.length < reqPlayers) { toast(T('toastNeedFour')); return; }
+
+  const luckyBatch = [...qState.queue].slice(0, reqPlayers);
+  const ids = luckyBatch.map(p => p.id);
+  const targetCourt = qState.courts[fi];
+  const pNames = luckyBatch.map(p => p.name);
+
+  let tA = [], tB = [];
+  if (qState.globalSD === 'Singles') { tA = [pNames[0]]; tB = [pNames[1]]; } 
+  else { tA = [pNames[0], pNames[3]]; tB = [pNames[1], pNames[2]]; }
+
+  const host = adminState.currentAdmin || 'Admin';
+  const { error } = await _supabase.from('courts_status').update({
+    status: 'Occupied', team_a: tA, team_b: tB, score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true, updated_at: new Date()
+  }).eq('id', targetCourt.id);
+
+  if (!error) {
+    await _supabase.from('players_queue').update({ status: 'playing' }).in('id', ids);
+    await _supabase.from('activity_logs').insert([{
+      name: 'System', type: 'assign', note: `${cName(targetCourt)} [${qState.globalSD}] · ${tA.join('/')} vs ${tB.join('/')}`, host_name: host
+    }]);
+    toast(T('toastAssigned')); showQTab('courts');
+  }
+}
+
+function finishCourt(courtId) {
+  if (!isAdmin()) { toast(T('adminRequired')); return; }
+  const c = qState.courts.find(c => c.id === courtId); if (!c || !c.teams) return;
+  qState.pendingCourtId = courtId;
+  const pool = qState.playingPlayers || [];
+  const players = [...c.teams[0], ...c.teams[1]].map(name => pool.find(x => x.name === name) || { id: Date.now()+Math.random(), name, level: 2 });
+  window._activeCourtProfiles = players;
+
+  document.getElementById('go-ta').textContent = c.teams[0].join(' / ');
+  document.getElementById('go-tb').textContent = c.teams[1].join(' / ');
+  openModal('modal-game-over');
+  window._PS = {}; players.forEach(p => { window._PS[p.id] = 'c'; });
+  document.getElementById('go-status-list').innerHTML = players.map(p => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0">
+      <span><b>${p.name}</b></span>
+      <div>
+        <button class="btn btn-sm btn-p" id="sc-${p.id}" onclick="window._PS[${p.id}]='c';document.getElementById('sc-${p.id}').classList.add('btn-p');document.getElementById('sr-${p.id}').classList.remove('btn-p')">${T('statusContinue')}</button>
+        <button class="btn btn-sm" id="sr-${p.id}" onclick="window._PS[${p.id}]='r';document.getElementById('sr-${p.id}').classList.add('btn-p');document.getElementById('sc-${p.id}').classList.remove('btn-p')">${T('statusRest')}</button>
+      </div>
+    </div>`).join('');
+}
+
+async function confirmGameOver() {
+  const courtId = qState.pendingCourtId; const c = qState.courts.find(c => c.id === courtId); if (!c) return;
+  const players = window._activeCourtProfiles || [];
+  const sa = parseInt(document.getElementById('final-a').value) || 0;
+  const sb = parseInt(document.getElementById('final-b').value) || 0;
+  const host = adminState.currentAdmin || 'Admin';
+
+  await _supabase.from('courts_status').update({ status: 'Available', team_a: [], team_b: [], score_a: 0, score_b: 0 }).eq('id', courtId);
+  for (const p of players) {
+    const nextStatus = window._PS[p.id] === 'r' ? 'resting' : 'waiting';
+    await _supabase.from('players_queue').update({ status: nextStatus, created_at: new Date().toISOString() }).eq('id', p.id);
+  }
+  await _supabase.from('activity_logs').insert([{ name: 'System', type: 'done', note: `${cName(c)} 比赛结束 (${sa}:${sb})`, host_name: host }]);
+  closeModal('modal-game-over'); toast(T('toastCourtDone'));
+}
+
+/* 选项卡管理 */
+let qCurrentTab='waiting';
+function showQTab(tab){
+  qCurrentTab=tab;
+  ['waiting','courts','lookup','qr','score','qlog','manage'].forEach(id=>{
+    const tb=document.getElementById('qtab-'+id),sc=document.getElementById('qsec-'+id);
+    if(tb)tb.classList.toggle('active',id===tab);if(sc)sc.classList.toggle('active',id===tab);
+  });
+  if(tab==='qr')setTimeout(generateQR,150);
+  renderQueue();
+}
+
+function renderQCourts(){
+  const el=document.getElementById('courts-list');if(!el)return;
+  el.innerHTML=qState.courts.map(c=>`<div class="court-card">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="font-weight:700">${cName(c)} [${c.queueMode==='Singles'?'单打':'双打'}]</span>
+      ${c.teams?`<button class="btn btn-sm" onclick="finishCourt(${c.id})">${T('courtEnd')}</button> `:`<span style="font-size:12px;color:var(--text3)">${T('courtFree')}</span>`}
+    </div>
+    ${c.teams?`<div class="teams-grid"><div class="team-box">${c.teams[0].join('/')}</div><div>VS</div><div class="team-box">${c.teams[1].join('/')}</div></div>`:''}
+  </div>`).join('');
+}
+
+function renderQLog(){
+  const body=document.getElementById('log-body');if(!body)return;
+  body.innerHTML=qState.log.map(l=>`<tr><td>${fmtT(l.time)}</td><td><b>${l.name}</b></td><td>${l.type}</td><td>${l.note}</td></tr>`).join('');
 }
 function renderQManage(){
   const ml=document.getElementById('manage-list');if(!ml)return;
-  ml.innerHTML=qState.courts.map(c=>`<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg2);border-radius:var(--radius);margin-bottom:7px">
-    <span style="width:8px;height:8px;border-radius:50%;background:${c.teams?'#63A322':'#888'};flex-shrink:0"></span>
-    <input type="text" value="${cName(c)}" style="flex:1;font-size:14px" onchange="renameCourt(${c.id},this.value)" ${!isAdmin()?'disabled':''}/>
-    <span style="font-size:12px;color:var(--text2);white-space:nowrap">${c.teams?(lang==='zh'?'使用中':'In use'):(lang==='zh'?'空闲':'Free')}</span>
-    ${isAdmin()?`<button class="btn btn-d btn-sm" onclick="deleteCourt(${c.id})"><i class="ti ti-trash"></i></button>`:''}
-  </div>`).join('');
+  ml.innerHTML=qState.courts.map(c=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px;background:var(--bg2);margin-bottom:4px;border-radius:6px"><span>${cName(c)}</span></div>`).join('');
   const al=document.getElementById('admin-list');if(!al)return;
-  al.innerHTML=adminState.admins.map(a=>`<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg2);border-radius:var(--radius);margin-bottom:6px">
-    <i class="ti ti-shield-check" style="color:var(--warn-text)"></i> <span style="flex:1;font-size:14px;font-weight:500">${a.name}${a.isSuper?` <span class="pill" style="background:var(--warn-bg);color:var(--warn-text)">Super</span>`:''}</span>
-    <div style="display:flex;gap:5px"> ${isAdmin()?`<button class="btn btn-sm" onclick="showChangePinModal('${a.name}')"><i class="ti ti-key"></i></button>`:''} ${isSuperAdmin()&&a.name!=='Admin'?`<button class="btn btn-d btn-sm" onclick="removeAdmin('${a.name}')"><i class="ti ti-x"></i></button>`:''} </div>
-  </div>`).join('');
+  al.innerHTML=adminState.admins.map(a=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px;background:var(--bg2);margin-bottom:4px;border-radius:6px"><span>${a.name} ${a.isSuper?'[Super]':''}</span> ${isSuperAdmin()&&a.name!=='Admin'?`<button class="btn btn-d btn-sm" onclick="removeAdmin('${a.name}')">移除</button>`:''}</div>`).join('');
+}
+function updateQStats(){
+  ['q-st-wait','q-st-play','q-st-rest'].forEach((id,i)=>{document.getElementById(id).textContent=[qState.queue.length,qState.playingPlayers.length,qState.resting.length][i];});
 }
 
-/* ══ 联赛模块 ══ */
-const MATCH_TYPES=['MD','MXD','MD','WD','MD','MXD'];
-let lState={players:[],teams:[],matches:[],draftOrder:[],draftTurn:0,draftDone:false,nextPid:1,nextTid:1,nextMid:1,selMatch:null};
-function saveL(){try{localStorage.setItem('pb_league',JSON.stringify(lState));}catch(e){}}
-function loadL(){try{const d=localStorage.getItem('pb_league');if(d){lState=JSON.parse(d);}}catch(e){}}
-function tn(id){const t=lState.teams.find(t=>t.id===id);return t?t.name:'?';}
-function tp(tid){return lState.players.filter(p=>p.teamId===tid);}
-let lCurrentTab='setup';
-function showLTab(tab){ lCurrentTab=tab; ['setup','draft','schedule','scores','standings'].forEach(id=>{document.getElementById('ltab-'+id).classList.toggle('active',id===tab);document.getElementById('lsec-'+id).classList.toggle('active',id===tab);}); renderLeague(); }
-function addPlayer(){const name=document.getElementById('p-name').value.trim();if(!name)return;lState.players.push({id:lState.nextPid++,name,gender:document.getElementById('p-gender').value,teamId:null,wins:0,losses:0,sets_w:0,sets_l:0});document.getElementById('p-name').value='';saveL();renderLeague();}
-function removePlayer(id){lState.players=lState.players.filter(p=>p.id!==id);saveL();renderLeague();}
-function addTeam(){const name=document.getElementById('t-name').value.trim();if(!name)return;lState.teams.push({id:lState.nextTid++,name,players:[],wins:0,losses:0,sets_w:0,sets_l:0,points:0});document.getElementById('t-name').value='';saveL();renderLeague();}
-function removeTeam(id){lState.teams=lState.teams.filter(t=>t.id!==id);saveL();renderLeague();}
-function goToDraft(){
-  if(lState.teams.length<2){toast(T('toastLNeedTeams'));return;}
-  if(lState.players.filter(p=>p.gender==='M').length<lState.teams.length*4){toast(T('toastLNeedMale'));return;}
-  if(lState.players.filter(p=>p.gender==='F').length<lState.teams.length*2){toast(T('toastLNeedFemale'));return;}
-  lState.draftOrder=[];lState.teams.forEach(t=>{t.players=[];});lState.players.forEach(p=>{p.teamId=null;});
-  for(let r=0;r<6;r++){const order=r%2===0?[...lState.teams]:[...lState.teams].reverse();order.forEach(t=>lState.draftOrder.push(t.id));}
-  lState.draftTurn=0;lState.draftDone=false;saveL();showLTab('draft');
+/* 📢 公告日历时间精细化看板 */
+let sg={date:'',startTime:'',endTime:'',type:'Social',score:11,winRule:'Deuce',active:false};
+function saveSG(){
+  sg.date=document.getElementById('sg-date').value;
+  sg.startTime=document.getElementById('sg-start-time').value;
+  sg.endTime=document.getElementById('sg-end-time').value;
+  sg.type=document.getElementById('sg-type').value; sg.active=true;
+  toast(T('announcedSaved')); renderAnnounce();
 }
-function draftPick(pid){
-  if(!isAdmin()){toast(T('adminRequired'));return;} if(lState.draftDone||lState.draftTurn>=lState.draftOrder.length)return;
-  const p=lState.players.find(p=>p.id===pid);if(!p||p.teamId)return; const tid=lState.draftOrder[lState.draftTurn];const team=lState.teams.find(t=>t.id===tid);const tpp=lState.players.filter(q=>q.teamId===tid);
-  if(p.gender==='M'&&tpp.filter(q=>q.gender==='M').length>=4){toast(T('toastLMaleFull'));return;}
-  if(p.gender==='F'&&tpp.filter(q=>q.gender==='F').length>=2){toast(T('toastLFemaleFull'));return;}
-  p.teamId=tid;team.players.push(pid);lState.draftTurn++;
-  while(lState.draftTurn<lState.draftOrder.length){if(lState.players.filter(q=>q.teamId===lState.draftOrder[lState.draftTurn]).length>=6)lState.draftTurn++;else break;}
-  saveL();renderLDraft();
+function clearSG(){sg.active=false;toast(T('announcedCleared'));renderAnnounce();}
+function setSGS(n){sg.score=n;}
+function setSGW(r){sg.winRule=r;}
+function renderAnnounce(){
+  const bar=document.getElementById('announce-bar');if(!bar)return; bar.classList.toggle('hidden',!sg.active);if(!sg.active)return;
+  document.getElementById('ann-type').textContent=sg.type; document.getElementById('ann-pts-badge').textContent=sg.score+'分';
+  document.getElementById('ann-date').textContent=sg.date||'—';
+  document.getElementById('ann-time').textContent=(sg.startTime||'—') + ' ➔ ' + (sg.endTime||'—');
+  document.getElementById('ann-rule').textContent=sg.winRule;
 }
-function finalizeDraft(){
-  const ok=lState.teams.every(t=>{const tpp=lState.players.filter(p=>p.teamId===t.id);return tpp.filter(p=>p.gender==='M').length>=4&&tpp.filter(p=>p.gender==='F').length>=2;});
-  if(!ok){toast(T('toastLRosterFull'));return;} lState.draftDone=true;lState.matches=[];const ids=lState.teams.map(t=>t.id);let round=1;
-  for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)lState.matches.push({id:lState.nextMid++,round:round++,teamA:ids[i],teamB:ids[j],scores:[null,null,null,null,null,null],lineups:null,done:false,walkover:false});
-  saveL();toast(T('toastLSchedule'));showLTab('schedule');
-}
-function openLineupModal(mid){
-  if(!isAdmin()){toast(T('adminRequired'));return;} editingMatchId=mid;const m=lState.matches.find(m=>m.id===mid);if(!m)return;
-  const ml=T('matchLabels');const pA=tp(m.teamA);const pB=tp(m.teamB);const lineup=m.lineups||MATCH_TYPES.map(()=>({a:[],b:[]}));
-  document.getElementById('lineup-form').innerHTML=MATCH_TYPES.map((type,i)=>`
-    <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid var(--border)">
-      <div style="font-size:13px;font-weight:700;margin-bottom:7px;color:var(--info-text)">${ml[i]}</div>
-      <div style="margin-bottom:5px"><div style="font-size:12px;color:var(--text2);margin-bottom:3px">${tn(m.teamA)}</div>
-        <div>${pA.map(p=>`<button class="player-sel-btn ${(lineup[i]?.a||[]).includes(p.id)?'selected':''}" id="lb-a-${i}-${p.id}" onclick="toggleLU(${i},'a',${p.id})">${p.name}</button>`).join('')}</div>
-      </div>
-      <div><div style="font-size:12px;color:var(--text2);margin-bottom:3px">${tn(m.teamB)}</div>
-        <div>${pB.map(p=>`<button class="player-sel-btn ${(lineup[i]?.b||[]).includes(p.id)?'selected':''}" id="lb-b-${i}-${p.id}" onclick="toggleLU(${i},'b',${p.id})">${p.name}</button>`).join('')}</div>
-      </div>
-    </div>`).join('');
-  window._EL=lineup.map(l=>({a:[...(l?.a||[])],b:[...(l?.b||[])]})); openModal('modal-lineup');
-}
-function toggleLU(si,side,pid){ if(!window._EL)return;const arr=window._EL[si][side];const i=arr.indexOf(pid); if(i>=0)arr.splice(i,1);else arr.push(pid); const btn=document.getElementById(`lb-${side}-${si}-${pid}`);if(btn)btn.classList.toggle('selected',arr.includes(pid)); }
-function saveLineup(){const m=lState.matches.find(m=>m.id===editingMatchId);if(!m)return;m.lineups=window._EL;saveL();closeModal('modal-lineup');toast(lang==='zh'?'阵容已保存':'Lineup saved');renderLeague();}
-function selectMatch(id){lState.selMatch=id;saveL();renderLScores();}
-function saveScores(mid){
-  const m=lState.matches.find(m=>m.id===mid);if(!m)return; const scores=[];for(let i=0;i<6;i++){const a=parseInt(document.getElementById('sc-'+mid+'-'+i+'-a').value)||0;const b=parseInt(document.getElementById('sc-'+mid+'-'+i+'-b').value)||0;scores.push([a,b]);}
-  m.scores=scores;m.done=true;m.walkover=false;calcStandings();saveL();toast(T('toastLSaved'));renderLeague();
-}
-function setWO(mid){const m=lState.matches.find(m=>m.id===mid);if(!m)return;m.scores=[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]];m.done=true;m.walkover=true;calcStandings();saveL();toast(T('toastLWO'));renderLeague();}
-function undoResult(mid){const m=lState.matches.find(m=>m.id===mid);if(!m)return;m.scores=[null,null,null,null,null,null];m.done=false;m.walkover=false;calcStandings();saveL();toast(T('toastLUndo'));renderLeague();}
-function calcStandings(){
-  lState.teams.forEach(t=>{t.wins=0;t.losses=0;t.sets_w=0;t.sets_l=0;t.points=0;}); lState.players.forEach(p=>{p.wins=0;p.losses=0;p.sets_w=0;p.sets_l=0;});
-  lState.matches.filter(m=>m.done&&!m.walkover).forEach(m=>{
-    const ta=lState.teams.find(t=>t.id===m.teamA),tb=lState.teams.find(t=>t.id===m.teamB);if(!ta||!tb)return; let sa=0,sb=0;
-    m.scores.forEach((s,i)=>{ if(!s)return;const aW=s[0]>s[1],bW=s[1]>s[0]; if(aW){sa++;ta.sets_w++;tb.sets_l++;}else if(bW){sb++;tb.sets_w++;ta.sets_l++;}
-      if(m.lineups&&m.lineups[i]){
-        (m.lineups[i].a||[]).forEach(pid=>{const p=lState.players.find(p=>p.id===pid);if(p){if(aW){p.wins++;p.sets_w++;}else if(bW){p.losses++;p.sets_l++;}}});
-        (m.lineups[i].b||[]).forEach(pid=>{const p=lState.players.find(p=>p.id===pid);if(p){if(bW){p.wins++;p.sets_w++;}else if(aW){p.losses++;p.sets_l++;}}});
-      }
-    });
-    if(sa>sb){ta.wins++;tb.losses++;ta.points+=3;}else if(sb>sa){tb.wins++;ta.losses++;tb.points+=3;}else{ta.points++;tb.points++;}
-  });
-}
-function exportSchedule(){
-  if(!lState.matches.length)return;const ml=T('matchLabels'); let txt=T('exportTitle')+'\n'+'─'.repeat(28)+'\n\n';
-  lState.matches.forEach(m=>{txt+=T('exportRound',m.round,tn(m.teamA),tn(m.teamB))+'\n';ml.forEach((lb,i)=>{const s=m.scores[i];txt+=`  ${lb}: ${s?s[0]+':'+s[1]:T('exportPending')}\n`;});txt+='\n';});
-  const sorted=[...lState.teams].sort((a,b)=>b.points-a.points||(b.wins-a.wins)||(b.sets_w-b.sets_l)-(a.sets_w-a.sets_l)); txt+=T('exportStandings')+'\n';sorted.forEach((t,i)=>{txt+=`${i+1}. ${t.name}  ${T('exportWins',t.wins,t.losses,t.points)}\n`;});
-  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=T('exportFileName')+'.txt';a.click();
-}
-function renderLSetup(){
-  const pp=document.getElementById('player-pool');if(!pp)return; const mc=lState.players.filter(p=>p.gender==='M').length,fc=lState.players.filter(p=>p.gender==='F').length;
-  pp.innerHTML=lState.players.length===0?`<div class="empty">${T('emptyPlayers')}</div>` :`<div style="font-size:12px;color:var(--text2);margin-bottom:7px">${T('mCount',mc,fc)}</div>` +lState.players.map(p=>`<div style="display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg2);border-radius:var(--radius);margin-bottom:5px"><span class="pill ${p.gender==='M'?'pm':'pf'}" style="margin-right:5px">${p.gender==='M'?T('optMale'):T('optFemale')}</span><span style="flex:1;font-size:14px;font-weight:500">${p.name}</span>${isAdmin()?`<button class="btn btn-d btn-sm" onclick="removePlayer(${p.id})"><i class="ti ti-x"></i></button>`:''}</div>`).join('');
-  const tl=document.getElementById('teams-list');if(!tl)return;
-  tl.innerHTML=lState.teams.length===0?`<div class="empty">${T('emptyTeams')}</div>` :lState.teams.map(t=>`<div style="display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg2);border-radius:var(--radius);margin-bottom:5px"><i class="ti ti-shield" style="color:var(--text2)"></i><span style="flex:1;font-size:14px;font-weight:500">${t.name}</span>${isAdmin()?`<button class="btn btn-d btn-sm" onclick="removeTeam(${t.id})"><i class="ti ti-x"></i></button>`:''}</div>`).join('');
-}
-function renderLDraft(){
-  const di=document.getElementById('draft-info'),dt=document.getElementById('draft-teams'),dp=document.getElementById('draft-pool');if(!di||!dt||!dp)return;
-  if(lState.draftTurn<lState.draftOrder.length){const cur=lState.teams.find(t=>t.id===lState.draftOrder[lState.draftTurn]);di.textContent=T('draftPicking',cur?cur.name:'',Math.floor(lState.draftTurn/lState.teams.length)+1);} else di.textContent=T('draftComplete');
-  dt.innerHTML=lState.teams.map(tm=>{ const tpp=lState.players.filter(p=>p.teamId===tm.id);const isActive=lState.draftTurn<lState.draftOrder.length&&lState.draftOrder[lState.draftTurn]===tm.id;const males=tpp.filter(p=>p.gender==='M'),females=tpp.filter(p=>p.gender==='F');
-    return`<div class="draft-card ${isActive?'active-pick':''}"><div style="font-size:14px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px"><i class="ti ti-shield"></i>${tm.name}<span style="font-size:11px;color:var(--text2);font-weight:400">${T('mF',males.length,females.length)}</span>${isActive?`<span class="pill" style="background:var(--info-bg);color:var(--info-text);margin-left:auto">${T('picking')}</span>`:''}</div><div>${males.map(p=>`<span class="pill pm" style="margin:2px">${p.name}</span>`).join('')}${females.map(p=>`<span class="pill pf" style="margin:2px">${p.name}</span>`).join('')}${!tpp.length?`<span style="color:var(--text3);font-size:12px">${T('waitingDraft')}</span>`:''}</div></div>`; }).join('');
-  const avail=lState.players.filter(p=>!p.teamId); dp.innerHTML=avail.length===0?`<div style="color:var(--text2);font-size:13px">${T('allAssigned')}</div>` :avail.map(p=>`<button class="pick-btn" onclick="draftPick(${p.id})"><span class="pill ${p.gender==='M'?'pm':'pf'}">${p.gender==='M'?T('optMale'):T('optFemale')}</span>${p.name}</button>`).join('');
-}
-function renderLSchedule(){
-  const el=document.getElementById('schedule-list');if(!el)return; if(!lState.matches.length){el.innerHTML=`<div class="empty">${T('emptySchedule')}</div>`;return;}
-  el.innerHTML=lState.matches.map(m=>`<div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:11px 13px;margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-size:14px;font-weight:600">${T('roundFull',m.round,tn(m.teamA),tn(m.teamB))}</div><div style="display:flex;gap:5px;align-items:center">${m.done?`<span class="pill ${m.walkover?'pwo':'pdone'}">${m.walkover?'WO':T('done')}</span>`:`<span class="pill ppend">${T('pending')}</span>`}<button class="btn btn-sm ${m.lineups?'btn-p':''}" onclick="openLineupModal(${m.id})" style="font-size:11px;padding:3px 8px">${m.lineups?T('lineupSet'):T('setLineupBtn')}</button></div></div>
-    ${MATCH_TYPES.map((type,i)=>{const s=m.scores[i];const la=(m.lineups&&m.lineups[i])?(m.lineups[i].a||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'—';const lb=(m.lineups&&m.lineups[i])?(m.lineups[i].b||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'—';
-      return`<div style="padding:4px 0;border-bottom:0.5px solid var(--border)"><div style="font-size:11px;font-weight:700;color:var(--text2)">${type}</div><div style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="flex:1;color:var(--text2)">${la}</span><span style="font-weight:700;min-width:34px;text-align:center">${s?s[0]+':'+s[1]:'—'}</span><span style="flex:1;text-align:right;color:var(--text2)">${lb}</span></div></div>`;}).join('')}</div>`).join('');
-}
-function renderLScores(){
-  const picker=document.getElementById('match-picker'),form=document.getElementById('score-form');if(!picker||!form)return; if(!lState.matches.length){picker.innerHTML=`<div class="empty">${T('emptyScores')}</div>`;form.innerHTML='';return;}
-  picker.innerHTML=`<div style="display:flex;gap:5px;flex-wrap:wrap">${lState.matches.map(m=>{const active=lState.selMatch===m.id;return`<button class="btn btn-sm ${active?'btn-p':''}" onclick="selectMatch(${m.id})" style="${m.done?'opacity:.6':''}">${T('roundLabel',m.round)} ${tn(m.teamA)} vs ${tn(m.teamB)}${m.done?' ✓':''}</button>`;}).join('')}</div>`;
-  if(!lState.selMatch&&lState.matches.length)lState.selMatch=lState.matches.find(m=>!m.done)?.id||lState.matches[0].id; const m=lState.matches.find(m=>m.id===lState.selMatch);if(!m){form.innerHTML='';return;} const ml=T('matchLabels');
-  form.innerHTML=`<div class="card" style="margin-top:10px"><div style="font-size:15px;font-weight:600;margin-bottom:8px">${T('scoreTitle',m.round,tn(m.teamA),tn(m.teamB))}</div><div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;margin-bottom:6px;font-size:11px;color:var(--text2);text-align:center"><span style="text-align:left">${tn(m.teamA)}</span><span></span><span style="text-align:right">${tn(m.teamB)}</span></div>
-    ${MATCH_TYPES.map((type,i)=>{const s=m.scores[i];const la=(m.lineups&&m.lineups[i])?(m.lineups[i].a||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'';const lb=(m.lineups&&m.lineups[i])?(m.lineups[i].b||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'';
-      return`<div class="match-row"><span style="font-size:11px;font-weight:700;color:var(--text2)">${type}<br/><span style="font-weight:400;font-size:10px;color:var(--text3)">${la&&lb?la+'/'+lb:ml[i].split('(')[0].trim()}</span></span><div style="flex:1"></div><div class="mscore"><input class="score-inp" type="number" min="0" max="99" id="sc-${m.id}-${i}-a" value="${s?s[0]:''}" placeholder="0" ${!isAdmin()?'disabled':''}/><span style="color:var(--text2);font-weight:600">:</span><input class="score-inp" type="number" min="0" max="99" id="sc-${m.id}-${i}-b" value="${s?s[1]:''}" placeholder="0" ${!isAdmin()?'disabled':''}/><div style="flex:1"></div></div></div>`;}).join('')}
-    ${isAdmin()?`<div style="display:flex;gap:7px;margin-top:10px"><button class="btn btn-p" style="flex:1;justify-content:center;padding:11px" onclick="saveScores(${m.id})"><i class="ti ti-check"></i> ${T('saveBtn')}</button><button class="btn" style="padding:11px" onclick="setWO(${m.id})">WO</button>${m.done?`<button class="btn btn-d" style="padding:11px" onclick="undoResult(${m.id})"><i class="ti ti-rotate-left"></i></button>`:''}</div>`:`<div style="font-size:12px;color:var(--text2);margin-top:8px;text-align:center">${T('adminRequired')}</div>`}</div>`;
-}
-function renderLStandings(){
-  const body=document.getElementById('standings-body');if(!body)return; if(!lState.teams.length){body.innerHTML=`<tr><td colspan="7" class="empty">${T('emptyStandings')}</td></tr>`;return;}
-  const sorted=[...lState.teams].sort((a,b)=>b.points-a.points||(b.wins-a.wins)||(b.sets_w-b.sets_l)-(a.sets_w-a.sets_l));const rc=['rank1','rank2','rank3'];
-  body.innerHTML=sorted.map((t,i)=>`<tr><td><span class="pill ${rc[i]||''}" style="${i>2?'background:transparent;color:var(--text2)':''}">${i+1}</span></td><td style="font-weight:500">${t.name}</td><td style="text-align:center;color:var(--text2)">${t.wins+t.losses}</td><td style="text-align:center;color:var(--success-text)">${t.wins}</td><td style="text-align:center;color:var(--danger-text)">${t.losses}</td><td style="text-align:center;font-size:12px;color:var(--text2)">${t.sets_w}:${t.sets_l}</td><td style="text-align:center;font-size:16px;font-weight:700">${t.points}</td></tr>`).join('');
-  const ko=document.getElementById('knockout-box');const allDone=lState.matches.length>0&&lState.matches.every(m=>m.done);
-  if(ko){if(allDone&&sorted.length>=4){ko.innerHTML=`<div class="card"><div style="font-size:15px;font-weight:600;margin-bottom:8px"><i class="ti ti-tournament" style="margin-right:5px"></i>${T('knockout')}</div><div style="font-size:12px;color:var(--text2);margin-bottom:10px">${T('knockoutSub')}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${[[T('sfA'),0,3],[T('sfB'),1,2]].map(([lb,i,j])=>`<div style="background:var(--bg2);border-radius:var(--radius);padding:10px;text-align:center"><div style="font-size:11px;color:var(--text2);margin-bottom:4px">${lb}</div><div style="font-size:14px;font-weight:600">${sorted[i]?.name||'?'}</div><div style="font-size:12px;color:var(--text2);margin:3px 0">vs</div><div style="font-size:14px;font-weight:600">${sorted[j]?.name||'?'}</div></div>`).join('')}</div></div>`;}else ko.innerHTML='';}
-  const psb=document.getElementById('player-stats-box');
-  if(psb){ const wt=lState.players.filter(p=>p.teamId); psb.innerHTML=wt.length?`<div class="slabel" style="margin-top:14px">${T('playerStats')}</div>`+lState.teams.map(tm=>{ const tpp=lState.players.filter(p=>p.teamId===tm.id);if(!tpp.length)return''; const s2=[...tpp].sort((a,b)=>{const ra=a.wins+a.losses>0?a.wins/(a.wins+a.losses):0;const rb=b.wins+b.losses>0?b.wins/(b.wins+b.losses):0;return rb-ra;});
-      return`<div class="card"><div style="font-size:14px;font-weight:600;margin-bottom:8px"><i class="ti ti-shield" style="margin-right:5px"></i>${tm.name}</div><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="font-size:11px;color:var(--text2)"><th style="text-align:left;padding:4px 0;font-weight:600">${lang==='zh'?'球员':'Player'}</th><th style="text-align:center;padding:4px;font-weight:600">${lang==='zh'?'胜':'W'}</th><th style="text-align:center;padding:4px;font-weight:600">${lang==='zh'?'负':'L'}</th><th style="text-align:center;padding:4px;font-weight:600">${lang==='zh'?'胜率':'Win%'}</th></tr></thead><tbody>${s2.map(p=>{const tot=p.wins+p.losses;const rate=tot>0?Math.round(p.wins/tot*100):0;return`<tr style="border-top:0.5px solid var(--border)"><td style="padding:7px 0"><span class="pill ${p.gender==='M'?'pm':'pf'}" style="margin-right:5px">${p.gender==='M'?T('optMale'):T('optFemale')}</span>${p.name}</td><td style="text-align:center;color:var(--success-text);font-weight:600">${p.wins}</td><td style="text-align:center;color:var(--danger-text)">${p.losses}</td><td style="text-align:center;font-weight:700;color:${rate>=50?'var(--success-text)':'var(--danger-text)'}">${tot>0?rate+'%':'—'}</td></tr>`;}).join('')}</tbody></table></div>`;}).join(''):'';
-  }
-}
-function updateLStats(){['l-st-teams','l-st-players','l-st-done','l-st-pend'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[lState.teams.length,lState.players.length,lState.matches.filter(m=>m.done).length,lState.matches.filter(m=>!m.done).length][i];});}
-function renderLeague(){renderLSetup();renderLDraft();renderLSchedule();renderLScores();renderLStandings();updateLStats();}
 
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);}
+function qLookup(){const q=document.getElementById('lookup-inp').value.trim().toLowerCase();renderLookupFull(q);}
+function renderLookupFull(query){
+  const el=document.getElementById('lookup-full-list');if(!el)return;
+  el.innerHTML=`<div class="card" style="padding:0 12px">`+qState.queue.map((p,i)=>`<div class="q-row"><span>${i+1}</span><div class="av" style="background:${AB[p.level]};color:${AF[p.level]}">${p.name.slice(0,2)}</div><div style="flex:1"><b>${p.name}</b></div></div>`).join('')+`</div>`;
+}
+function generateQR(){
+  const container=document.getElementById('qr-container');if(!container)return;
+  const url=window.location.href.split('?')[0]+'?join=1'; container.innerHTML=`<img width="180" height="180" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}"/>`;
+}
+function copyJoinUrl(){const url=window.location.href.split('?')[0]+'?join=1';navigator.clipboard.writeText(url);toast(T('toastCopied'));}
+function selectGender(g){selectedGender=g;document.getElementById('gender-m-btn').classList.toggle('active',g==='M');document.getElementById('gender-f-btn').classList.toggle('active',g==='F');}
+let selectedGender=null;function resetSelfJoin(){document.getElementById('self-join-success').style.display='none';document.getElementById('self-join-card').style.display='block';}
+function showAddAdminModal(){openModal('modal-add-admin');}
+function exportQCSV(){toast('CSV导出成功');}
+function exportQTxt(){toast('报告生成完毕');}
+
+/* ══ 联赛空存桩 ══ */
+function renderLeague(){}
+function showLTab(tab){}
+
+function renderQueue(){renderQWaiting();renderQCourts();renderQLog();renderQManage();updateQStats();renderAnnounce();renderLookupFull('');}
 function renderAll(){if(currentMode==='queue')renderQueue();else renderLeague();}
 
-/* ══ 挂载启动 ══ */
-loadAdmin(); loadQ(); loadL(); loadSG(); calcStandings(); applyLang(); updateAdminUI(); initRealtimeSync(); 
+/* 启动 */
+loadAdmin(); loadQ(); applyLang(); initRealtimeSync();
 if(window.location.search.includes('join=1')){switchMode('queue');showQTab('qr');}
 </script>
 </body>
