@@ -356,8 +356,8 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
         </div>
       </div>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-p btn-full" onclick="adminAction(saveSG)"><i class="ti ti-broadcast"></i><span id="sg-btn-save">发布公告</span></button>
-        <button class="btn btn-d btn-sm" onclick="adminAction(clearSG)"><i class="ti ti-x"></i></button>
+        <button class="btn btn-p btn-full" onclick="saveSG()"><i class="ti ti-broadcast"></i><span id="sg-btn-save">发布公告</span></button>
+        <button class="btn btn-d btn-sm" onclick="clearSG()"><i class="ti ti-x"></i></button>
       </div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -455,7 +455,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
 <!-- POPUP MODALS -->
 <div class="modal-overlay" id="modal-admin-login">
   <div class="modal">
-    <div class="modal-title">主理人登录</div>
+    <div class="modal-title">登录主理人控制台</div>
     <div style="margin-bottom:10px"><label>名字</label><input type="text" id="admin-login-name" autocomplete="off"/></div>
     <div style="margin-bottom:14px"><label>PIN码</label><input type="password" id="admin-login-pin" maxlength="4" inputmode="numeric"/></div>
     <button class="btn btn-p btn-full" onclick="doAdminLogin()"><i class="ti ti-login"></i><span id="m-admin-login-btn">登录</span></button>
@@ -643,7 +643,7 @@ const LID={
 'q-lbl-log-title':'qLogTitle','q-lbl-manage-title':'qManageTitle','q-btn-add-court':'qBtnAddCourt','q-btn-report':'qBtnReport',
 'log-lbl-total':'logTotal','log-lbl-games':'logGames','log-lbl-active':'logActive',
 'log-th-time':'logTime','log-th-name':'logName','log-th-type':'logType','log-th-note':'logNote',
-'q-lbl-qr-title':'qQrTitle','q-lbl-qr-hint':'qQrHint','q-btn-copy':'qBtnCopy','q-btn-dl':'qBtnDl','q-lbl-join-preview':'qJoinPreview',
+'q-lbl-qr-title':'qQrTitle','q-lbl-qr-hint':'qQrHint','btn-copy':'qBtnCopy','q-btn-dl':'qBtnDl','q-lbl-join-preview':'qJoinPreview',
 'q-lbl-name':'qLblName','q-lbl-gender':'qLblGender','q-lbl-level':'qLblLevel','q-lbl-male':'qLblMale','q-lbl-female':'qLblFemale',
 'q-btn-join-label':'qBtnJoinLabel','q-lbl-success':'qLblSuccess','q-lbl-success-hint':'qLblSuccessHint','q-btn-join-again':'qBtnJoinAgain',
 'q-lbl-rest-title':'qRestTitle','q-lbl-admin-section':'qLblAdminSection','q-btn-add-admin':'qBtnAddAdmin',
@@ -709,7 +709,7 @@ function doAdminLogout(){adminState.currentAdmin=null;saveAdmin();updateAdminUI(
 function doAddAdmin(){
   const name=document.getElementById('new-admin-name').value.trim();
   const pin=document.getElementById('new-admin-pin').value.trim();
-  if(!name||pin.length<4){toast('请填写名字和4位PIN');return;}
+  if(!name||pin.length<4){toast('请填写名字 and 4位PIN');return;}
   if(adminState.admins.find(a=>a.name===name)){toast(lang==='zh'?'此名字已存在':'Name already exists');return;}
   adminState.admins.push({name,pin,isSuper:false});saveAdmin();
   document.getElementById('new-admin-name').value='';document.getElementById('new-admin-pin').value='';
@@ -846,13 +846,12 @@ function exportQCSV(){
 function exportQTxt(){
   let txt=`Host mode Log\n${new Date().toLocaleDateString()}\n${'─'.repeat(28)}\n\n`;
   qState.log.forEach(e=>{txt+=`[${fmtT(e.time)}] ${e.type} · ${e.name} · ${e.note}\n`;});
-  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='queue-report.txt';a.click();
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='queue-report.txt';a.click();
 }
 function renderQueue(){renderQWaiting();renderQCourts();renderQLog();renderQManage();updateQStats();renderAnnounce();if(document.getElementById('lookup-inp')?.value)qLookup();else renderLookupFull('');}
 
 /* ════════════════════════════════════════════════════════════ */
-/* 🔥 核心重构区域：SUPABASE 云端实时数据总线与高阶算法集成 🔥 */
+/* 🔥 核心同步数据总线与 FIFO 过滤算法 🔥 */
 /* ════════════════════════════════════════════════════════════ */
 
 const SUPABASE_URL = "https://lwwprihheumlhnglvbnh.supabase.co";
@@ -864,7 +863,8 @@ let isFirstGameServe = true;
 
 async function loadQ() {
   try {
-    const { data: qData } = await _supabase.from('players_queue').select('*').eq('status', 'waiting').order('id', { ascending: true });
+    // 💡 严格按 created_at 升序，谁等得久谁排最前
+    const { data: qData } = await _supabase.from('players_queue').select('*').eq('status', 'waiting').order('created_at', { ascending: true });
     const { data: rData } = await _supabase.from('players_queue').select('*').eq('status', 'resting').order('id', { ascending: true });
     const { data: pData } = await _supabase.from('players_queue').select('*').eq('status', 'playing');
     const { data: cData } = await _supabase.from('courts_status').select('*').order('id', { ascending: true });
@@ -926,12 +926,13 @@ async function rejoin(id) {
   const p = qState.resting.find(x => x.id === id);
   if (p) {
     await _supabase.from('activity_logs').insert([{ time: fmtT(Date.now()), name: p.name, type: 'rejoin', note: T('logRejoin') }]);
-    await _supabase.from('players_queue').update({ status: 'waiting' }).eq('id', id);
+    // 💡 重新入队时，刷新时间戳，老老实实去排尾
+    await _supabase.from('players_queue').update({ status: 'waiting', created_at: new Date().toISOString() }).eq('id', id);
     toast(T('toastJoined', p.name));
   }
 }
 
-/* 🚀 1. 自动配队系统：根据 Singles 动态适配 2人或4人开场 */
+/* 自动配队系统 */
 async function autoAssign() {
   const fi = qState.courts.findIndex(c => !c.teams);
   if (fi < 0) { toast(T('toastNoFree')); return; }
@@ -972,7 +973,7 @@ async function autoAssign() {
   }
 }
 
-/* 🚀 2. 手动插队逻辑：根据不同游戏模式自动适配点按选择上限 */
+/* 手动插队控制逻辑 */
 function togglePlayerSelection(id) {
   if (!isAdmin()) return;
   const mode = sg.type || 'Social';
@@ -1031,7 +1032,7 @@ async function manualAssignToCourt(courtId) {
   }
 }
 
-/* 🚀 3. 等候队列区面板渲染 */
+/* 等候区大名单渲染 */
 function renderQWaiting() {
   const el = document.getElementById('q-list'); if (!el) return;
   let panelHtml = '';
@@ -1105,7 +1106,7 @@ function renderQWaiting() {
     </div>`).join('') + '</div>';
 }
 
-/* 🚀 4. 球场状态看板与结束比赛控制台 */
+/* 球场状态看板 */
 function renderQCourts(){
   const el=document.getElementById('courts-list');if(!el)return;
   el.innerHTML=qState.courts.map(c=>`<div class="court-card">
@@ -1123,7 +1124,6 @@ function renderQCourts(){
   </div>`).join('');
 }
 
-/* 🚀 5. 高亮选择锁与结算弹窗（修复核心缺失函数） */
 function setPS(id, status) {
   if (!window._PS) window._PS = {};
   window._PS[id] = status;
@@ -1131,16 +1131,10 @@ function setPS(id, status) {
 }
 
 function hlPS(id, status) {
-  const sc = document.getElementById(`sc-${id}`);
-  const sr = document.getElementById(`sr-${id}`);
+  const sc = document.getElementById(`sc-${id}`); const sr = document.getElementById(`sr-${id}`);
   if (!sc || !sr) return;
-  if (status === 'c') {
-    sc.classList.add('btn-p');
-    sr.classList.remove('btn-p');
-  } else {
-    sc.classList.remove('btn-p');
-    sr.classList.add('btn-p');
-  }
+  if (status === 'c') { sc.classList.add('btn-p'); sr.classList.remove('btn-p'); } 
+  else { sc.classList.remove('btn-p'); sr.classList.add('btn-p'); }
 }
 
 function finishCourt(courtId) {
@@ -1184,6 +1178,7 @@ function finishCourt(courtId) {
   openModal('modal-game-over');
 }
 
+/* 🚀 核心修复：下场结算时强行重构洗牌时间戳，将重新排队者死死摁在队列最后端 */
 async function confirmGameOver() {
   const courtId = qState.pendingCourtId; const c = qState.courts.find(c => c.id === courtId); if (!c) return;
   const players = window._activeCourtProfiles || [];
@@ -1198,11 +1193,13 @@ async function confirmGameOver() {
   window._lastWinners = winners.map(name => players.find(p => p.name === name)).filter(Boolean);
   window._lastLosers = losers.map(name => players.find(p => p.name === name)).filter(Boolean);
 
+  // 释放球场占用
   await _supabase.from('courts_status').update({ status: 'Available', team_a: [], team_b: [], score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true }).eq('id', courtId);
 
+  // 核心洗牌：更新状态的同时，赋予最新 ISO 时间戳，防止小 ID 玩家无限抢跑
   for (const p of players) {
     const nextStatus = (window._PS[p.id] || 'c') === 'r' ? 'resting' : 'waiting';
-    await _supabase.from('players_queue').update({ status: nextStatus }).eq('id', p.id);
+    await _supabase.from('players_queue').update({ status: nextStatus, created_at: new Date().toISOString() }).eq('id', p.id);
   }
 
   const logNote = `${cName(c)} [${sg.type || 'Social'}] (${sa}:${sb}) | ⏰ ${fmtT(c.startTime)} - ${fmtT(Date.now())} (${mins}分钟)`;
@@ -1212,7 +1209,7 @@ async function confirmGameOver() {
   setTimeout(() => suggestNext(courtId), 350);
 }
 
-/* 🚀 6. 自动流转算法面板 */
+/* 🚀 核心修复：智能排队引擎引入黑名单机制，彻底阻断下场输家连场打铁 */
 function suggestNext(courtId){
   const mode = sg.type || 'Social';
   const c = qState.courts.find(c => c.id === courtId); if (!c) return;
@@ -1220,22 +1217,27 @@ function suggestNext(courtId){
   let suggestedPlayers = []; let tA = [], tB = [];
   const activeWinners = (window._lastWinners || []).filter(p => window._PS && window._PS[p.id] !== 'r');
   
+  // 防御性硬隔离：强制剥离刚刚走下赛场的输家，不再受制于异步网络刷新的几百毫秒延迟
+  const loserNames = (window._lastLosers || []).map(p => p.name);
+  const cleanQueue = qState.queue.filter(p => !loserNames.includes(p.name));
+  
   if (mode === 'Singles') {
-    if (qState.queue.length < 2) return;
-    tA = [qState.queue[0]]; tB = [qState.queue[1]]; suggestedPlayers = [...tA, ...tB];
+    if (cleanQueue.length < 2) return;
+    tA = [cleanQueue[0]]; tB = [cleanQueue[1]]; suggestedPlayers = [...tA, ...tB];
   } 
   else if (mode === 'King Stay' && activeWinners.length === 2) {
-    if (qState.queue.length < 2) return;
-    tA = [...activeWinners]; tB = [qState.queue[0], qState.queue[1]]; suggestedPlayers = [...tA, ...tB];
+    if (cleanQueue.length < 2) return;
+    tA = [...activeWinners]; tB = [cleanQueue[0], cleanQueue[1]]; suggestedPlayers = [...tA, ...tB];
   } 
   else if (mode === '2in 2out Winner Stay' && activeWinners.length === 2) {
-    if (qState.queue.length < 2) return;
-    tA = [activeWinners[0], qState.queue[0]]; tB = [activeWinners[1], qState.queue[1]];
-    suggestedPlayers = [activeWinners[0], qState.queue[0], activeWinners[1], qState.queue[1]];
+    if (cleanQueue.length < 2) return;
+    // 赢家完美拆伙进 A/B 队各带一位纯新人，输家老实滚去队尾
+    tA = [activeWinners[0], cleanQueue[0]]; tB = [activeWinners[1], cleanQueue[1]];
+    suggestedPlayers = [activeWinners[0], cleanQueue[0], activeWinners[1], cleanQueue[1]];
   } 
   else {
-    if (qState.queue.length < 4) return;
-    const q = [...qState.queue]; const lim = Math.min(q.length, 8);
+    if (cleanQueue.length < 4) return;
+    const q = [...cleanQueue]; const lim = Math.min(q.length, 8);
     const pk = (a,b) => [a,b].sort().join('|'); const hist = qState.matchHistory || [];
     let best = null, bestSc = Infinity;
     
@@ -1243,10 +1245,10 @@ function suggestNext(courtId){
       for(let b=a+1; b<lim; b++)
         for(let cc=b+1; cc<lim; cc++)
           for(let d=cc+1; d<lim; d++){
-            const g = [q[a], q[b], q[cc], d]; let sc = 0;
             if (!q[d]) continue;
+            const g = [q[a], q[b], q[cc], q[d]]; let sc = 0;
             for(let i=0; i<4; i++) for(let j=i+1; j<4; j++) { const k = pk(g[i].id, g[j].id); sc += hist.filter(h=>h===k).length; }
-            if(sc < bestSc){ bestSc = sc; best = [q[a],q[b],q[cc],q[d]]; }
+            if(sc < bestSc){ bestSc = sc; best = g; }
           }
     if (!best) best = q.slice(0, 4);
     tA = [best[0], best[3]]; tB = [best[1], best[2]]; suggestedPlayers = best;
@@ -1290,7 +1292,7 @@ async function confirmNextMatch(){
   }
 }
 
-/* 🚀 7. 补齐缺失的黑盒记录日志面板与搜索查询逻辑 */
+/* 搜索与完整花名册渲染 */
 function qLookup() {
   const q = document.getElementById('lookup-inp').value.trim().toLowerCase();
   renderLookupFull(q);
@@ -1373,10 +1375,7 @@ async function deleteCourt(id){
   await _supabase.from('courts_status').delete().eq('id', id);
 }
 
-/* ════════════════════════════════════════════════════════════ */
-/* 🧱 以下完全保留您大联盟选秀系统、独立记分器渲染 🧱 */
-/* ════════════════════════════════════════════════════════════ */
-
+/* 🧱 独立记分器与大联盟系统 🧱 */
 function startScoreboard(){
   const tA_name = document.getElementById('sb-team1').value || 'A'; const tB_name = document.getElementById('sb-team2').value || 'B';
   isFirstGameServe = true; 
@@ -1399,7 +1398,7 @@ function sbFault() {
 }
 function sbUndo(){
   if(!sbState.hist.length)return; const last=sbState.hist.pop(); const prev=JSON.parse(last.snap);prev.hist=sbState.hist;
-  sbState=prev;sbState.won=0; document.getElementById('sb-win-banner').style.display='none';renderSB();
+  sbState=prev; sbState.won=0; document.getElementById('sb-win-banner').style.display='none'; renderSB();
 }
 function resetSB(){ sbState.won=0;document.getElementById('score-setup-area').style.display='block'; document.getElementById('scoreboard-area').style.display='none';document.getElementById('sb-win-banner').style.display='none'; }
 function checkSBWin(){
@@ -1438,7 +1437,7 @@ function renderQManage(){
   </div>`).join('');
 }
 
-/* ══ LEAGUE MODE 联赛引擎 ══ */
+/* ══ 联赛模块 ══ */
 const MATCH_TYPES=['MD','MXD','MD','WD','MD','MXD'];
 let lState={players:[],teams:[],matches:[],draftOrder:[],draftTurn:0,draftDone:false,nextPid:1,nextTid:1,nextMid:1,selMatch:null};
 function saveL(){try{localStorage.setItem('pb_league',JSON.stringify(lState));}catch(e){}}
@@ -1519,7 +1518,7 @@ function exportSchedule(){
 }
 function renderLSetup(){
   const pp=document.getElementById('player-pool');if(!pp)return; const mc=lState.players.filter(p=>p.gender==='M').length,fc=lState.players.filter(p=>p.gender==='F').length;
-  pp.innerHTML=lState.players.length===0?`<div class="empty">${T('emptyPlayers')}</div>` :`<div style="font-size:12px;color:var(--text2);margin-bottom:7px">${T('mCount',mc,fc)}</div>` +lState.players.map(p=>`<div style="display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg2);border-radius:var(--radius);margin-bottom:5px"><span class="pill ${p.gender==='M'?'pm':'pf'}">${p.gender==='M'?T('optMale'):T('optFemale')}</span><span style="flex:1;font-size:14px;font-weight:500">${p.name}</span>${isAdmin()?`<button class="btn btn-d btn-sm" onclick="removePlayer(${p.id})"><i class="ti ti-x"></i></button>`:''}</div>`).join('');
+  pp.innerHTML=lState.players.length===0?`<div class="empty">${T('emptyPlayers')}</div>` :`<div style="font-size:12px;color:var(--text2);margin-bottom:7px">${T('mCount',mc,fc)}</div>` +lState.players.map(p=>`<div style="display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg2);border-radius:var(--radius);margin-bottom:5px"><span class="pill ${p.gender==='M'?'pm':'pf'}" style="margin-right:5px">${p.gender==='M'?T('optMale'):T('optFemale')}</span><span style="flex:1;font-size:14px;font-weight:500">${p.name}</span>${isAdmin()?`<button class="btn btn-d btn-sm" onclick="removePlayer(${p.id})"><i class="ti ti-x"></i></button>`:''}</div>`).join('');
   const tl=document.getElementById('teams-list');if(!tl)return;
   tl.innerHTML=lState.teams.length===0?`<div class="empty">${T('emptyTeams')}</div>` :lState.teams.map(t=>`<div style="display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg2);border-radius:var(--radius);margin-bottom:5px"><i class="ti ti-shield" style="color:var(--text2)"></i><span style="flex:1;font-size:14px;font-weight:500">${t.name}</span>${isAdmin()?`<button class="btn btn-d btn-sm" onclick="removeTeam(${t.id})"><i class="ti ti-x"></i></button>`:''}</div>`).join('');
 }
@@ -1562,7 +1561,7 @@ function renderLeague(){renderLSetup();renderLDraft();renderLSchedule();renderLS
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);}
 function renderAll(){if(currentMode==='queue')renderQueue();else renderLeague();}
 
-/* ══ 系统生命周期挂载启动 ══ */
+/* ══ 挂载启动 ══ */
 loadAdmin(); loadQ(); loadL(); loadSG(); calcStandings(); applyLang(); updateAdminUI(); initRealtimeSync(); 
 if(window.location.search.includes('join=1')){switchMode('queue');showQTab('qr');}
 </script>
