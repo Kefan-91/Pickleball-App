@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="Pickleball"/>
-<title>Maple Leaf Pickleball Club</title>
+<title>Maple Leaf Pickleball Club — Host Mode</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -114,7 +114,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
 <div class="topbar">
   <div class="topbar-left">
     <div class="mode-switch">
-      <button class="mode-btn active" id="mode-btn-queue" onclick="switchMode('queue')"><i class="ti ti-list"></i><span id="ml-queue">排队</span></button>
+      <button class="mode-btn active" id="mode-btn-queue" onclick="switchMode('queue')"><i class="ti ti-list"></i><span id="ml-queue">Host mode</span></button>
       <button class="mode-btn" id="mode-btn-league" onclick="switchMode('league')"><i class="ti ti-trophy"></i><span id="ml-league">联赛</span></button>
     </div>
   </div>
@@ -125,6 +125,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
   </div>
 </div>
 
+<!-- QUEUE MODE CONTAINER -->
 <div class="mode-panel active" id="panel-queue">
   <div class="announce-bar hidden" id="announce-bar">
     <div class="announce-top">
@@ -152,6 +153,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
     <button class="tab" onclick="showQTab('manage')" id="qtab-manage"><span id="qt-manage">管理</span></button>
   </div>
 
+  <!-- SECTIONS -->
   <div class="sec active" id="qsec-waiting">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <span class="slabel" style="margin:0" id="q-lbl-waiting-title">等待中</span>
@@ -228,7 +230,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
       <div class="card">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div><label id="q-lbl-team1">队伍 A</label><input type="text" id="sb-team1" placeholder="A队"/></div>
-          <div><label id="q-lbl-team2">队伍 B</label><input type="text" id="sb-team2" placeholder="B队"/></div>
+          <div><label id="sb-team2">队伍 B</label><input type="text" id="sb-team2" placeholder="B队"/></div>
         </div>
         <div style="margin-bottom:10px">
           <label id="q-lbl-score-to">目标分数</label>
@@ -329,7 +331,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
       </div>
       <div style="margin-bottom:10px">
         <label id="sg-lbl-type">游戏种类</label>
-        <select id="sg-type">
+        <select id="sg-type" onchange="sg.type=this.value; clearManualSelection();">
           <option>Social</option><option>Round Robin</option><option>Singles</option>
           <option>Doubles</option><option>King Stay</option><option>Ladder Game</option>
           <option>2in 2out Winner Stay</option><option>2in2out</option>
@@ -369,6 +371,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
   </div>
 </div>
 
+<!-- LEAGUE MODE CONTAINER -->
 <div class="mode-panel" id="panel-league">
   <div class="sg">
     <div class="sc"><div class="sn" id="l-st-teams">0</div><div class="sl" id="l-lbl-teams">队伍</div></div>
@@ -447,7 +450,10 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
   </div>
 </div>
 
-</div><div class="modal-overlay" id="modal-admin-login">
+</div><!-- /app -->
+
+<!-- POPUP MODALS -->
+<div class="modal-overlay" id="modal-admin-login">
   <div class="modal">
     <div class="modal-title">主理人登录</div>
     <div style="margin-bottom:10px"><label>名字</label><input type="text" id="admin-login-name" autocomplete="off"/></div>
@@ -494,6 +500,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
     </div>
     <div style="font-size:13px;font-weight:600;margin-bottom:8px">各球员选择状态</div>
     <div id="go-status-list" style="margin-bottom:14px"></div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:10px;text-align:center;font-style:italic;">* 提示：如果是 King Stay 或 2in2out 模式，请确保勾选“继续排队”的赢家数量正确才能完美继承擂台。</div>
     <button class="btn btn-p btn-full" onclick="confirmGameOver()"><i class="ti ti-check"></i> 确认</button>
     <button class="btn btn-full" style="margin-top:8px" onclick="closeModal('modal-game-over')">取消</button>
   </div>
@@ -521,7 +528,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
 
 <script>
 /* ══ i18n 字典系统 ══ */
-const ZH={mlQueue:'排队',mlLeague:'联赛',langLabel:'EN',adminBtnLabel:'主理人',adminLogout:'退出',
+const ZH={mlQueue:'Host mode',mlLeague:'联赛',langLabel:'EN',adminBtnLabel:'主理人',adminLogout:'退出',
 qWait:'等待',qPlay:'打球中',qRest:'休息中',
 qtWaiting:'队列',qtCourts:'球场',qtLookup:'查排名',qtQr:'扫码加入',qtScore:'计分',qtQlog:'记录',qtManage:'管理',
 qWaitTitle:'等待中',qCourtsTitle:'球场状态',qBtnAuto:'自动配队',
@@ -541,7 +548,7 @@ posLabel:(p,t)=>`你在第 ${p} 位（共 ${t} 人）`,estWait:'预计等待',al
 readyMsg:'你是下一位！请准备上场',notFound:(q)=>`未找到「${q}」`,
 logJoin:'加入',logAssign:'配队',logDone:'结束',logLeave:'离队',logRejoin:'再排',
 toastJoined:(n)=>`${n} 已加入`,toastAssigned:'配队成功！',toastNoFree:'没有空闲球场',
-toastNeedFour:'等待人数不足4人',toastCourtDone:'本局结束',toastCopied:'链接已复制',
+toastNeedFour:'等待人数不足符合开赛要求',toastCopied:'链接已复制',
 minutesAgo:(m)=>m<1?'刚刚':`${m}分钟前`,minutesPlayed:(m)=>`已打 ${m} 分钟`,
 courtNameDefault:(i)=>`${i}号球场`,statusContinue:'继续排队',statusRest:'先休息',
 avoidRepeat:'（已尽量避免重复对战）',filterAll:'全部',
@@ -572,7 +579,7 @@ exportPending:'待打',exportDoneWord:'已完成',exportStandings:'积分榜',
 exportWins:(w,l,p)=>`${p}分  ${w}胜${l}负`,exportFileName:'联赛赛程',
 setLineupBtn:'填写阵容',lineupSet:'阵容已填',adminRequired:'请先登录主理人账号',
 };
-const EN={mlQueue:'Queue',mlLeague:'League',langLabel:'中文',adminBtnLabel:'Admin',adminLogout:'Logout',
+const EN={mlQueue:'Host mode',mlLeague:'League',langLabel:'中文',adminBtnLabel:'Admin',adminLogout:'Logout',
 qWait:'Waiting',qPlay:'Playing',qRest:'Resting',
 qtWaiting:'Queue',qtCourts:'Courts',qtLookup:'My Place',qtQr:'QR Join',qtScore:'Score',qtQlog:'Log',qtManage:'Manage',
 qWaitTitle:'Waiting Players',qCourtsTitle:'Court Status',qBtnAuto:'Auto-assign',
@@ -592,7 +599,7 @@ posLabel:(p,t)=>`You are #${p} of ${t}`,estWait:'Est. wait',alreadyWait:'Waited'
 readyMsg:"You're next! Get ready.",notFound:(q)=>`"${q}" not found`,
 logJoin:'Join',logAssign:'Assign',logDone:'Done',logLeave:'Left',logRejoin:'Rejoin',
 toastJoined:(n)=>`${n} joined`,toastAssigned:'Teams assigned!',toastNoFree:'No free courts',
-toastNeedFour:'Need at least 4 waiting',toastCourtDone:'Game ended',toastCopied:'Link copied',
+toastNeedFour:'Not enough players for this game mode',toastCourtDone:'Game ended',toastCopied:'Link copied',
 minutesAgo:(m)=>m<1?'just now':`${m}m ago`,minutesPlayed:(m)=>`${m} min played`,
 courtNameDefault:(i)=>`Court ${i}`,statusContinue:'Re-queue',statusRest:'Take a rest',
 avoidRepeat:'(minimising repeat matchups)',filterAll:'All',
@@ -642,7 +649,7 @@ const LID={
 'q-lbl-rest-title':'qRestTitle','q-lbl-admin-section':'qLblAdminSection','q-btn-add-admin':'qBtnAddAdmin',
 'q-lbl-social-title':'qLblSocialTitle','sg-lbl-date':'sgLblDate','sg-lbl-time':'sgLblTime','sg-lbl-type':'sgLblType','sg-lbl-score':'sgLblScore','sg-lbl-win':'sgLblWin','sg-btn-save':'sgBtnSave',
 'q-lbl-score-setup':'qLblScoreSetup','q-lbl-team1':'qLblTeam1','q-lbl-team2':'qLblTeam2','q-lbl-score-to':'qLblScoreTo','q-lbl-win-type':'qLblWinType','q-lbl-score-sys':'qLblScoreSys','q-btn-start-score':'qBtnStartScore',
-'sb-fault-lbl':'sbFaultLbl','sb-undo-lbl':'sbUndoLbl','sb-reset-lbl':'sbResetLbl','sb-new-game-lbl':'sbNewGameLbl',
+'sb-fault-flow':'sbFaultLbl','sb-undo-lbl':'sbUndoLbl','sb-reset-lbl':'sbResetLbl','sb-new-game-lbl':'sbNewGameLbl',
 'l-lbl-teams':'lTeams','l-lbl-players':'lPlayers','l-lbl-done':'lDone','l-lbl-pend':'lPend',
 'lt-setup':'ltSetup','lt-draft':'ltDraft','lt-schedule':'ltSchedule','lt-scores':'ltScores','lt-standings':'ltStandings',
 'l-lbl-reg':'lReg','l-lbl-create-team':'lCreateTeam','l-btn-create':'lBtnCreate','l-btn-go-draft':'lBtnGoDraft',
@@ -664,7 +671,7 @@ function applyLang(){
 }
 function toggleLang(){lang=lang==='zh'?'en':'zh';localStorage.setItem('pb_lang',lang);applyLang();renderAll();}
 
-/* ══ 视图分流导航 ══ */
+/* ══ Mode 切换 ══ */
 let currentMode='queue';
 function switchMode(m){
   currentMode=m;
@@ -675,7 +682,7 @@ function switchMode(m){
   renderAll();
 }
 
-/* ══ 主理人鉴权逻辑 ══ */
+/* ══ 主理人配置 ══ */
 let adminState={admins:[{name:'Admin',pin:'1234',isSuper:true}],currentAdmin:null};
 function saveAdmin(){try{localStorage.setItem('pb_admin',JSON.stringify(adminState));}catch(e){}}
 function loadAdmin(){
@@ -752,13 +759,13 @@ function updateAdminUI(){
   }
 }
 
-/* ══ 模态弹窗控制 ══ */
+/* ══ MODAL弹窗 ══ */
 function openModal(id){document.getElementById(id).classList.add('show');}
 function closeModal(id){document.getElementById(id).classList.remove('show');}
 
-/* ══ SOCIAL GAME 公告栏 ══ */
+/* ══ 公告栏 ══ */
 let sg={date:'',time:'',type:'Social',score:11,winRule:'Deuce',active:false};
-function loadSG(){try{const d=localStorage.getItem('pb_sg');if(d)sg=JSON.parse(d);}catch(e){}}
+function loadSG(){try{const d=localStorage.getItem('pb_sg');if(d)sg=JSON.parse(d); if(sg.type) {setTimeout(()=>{document.getElementById('sg-type').value=sg.type;},100);}}catch(e){}}
 function saveSG(){sg.date=document.getElementById('sg-date').value;sg.time=document.getElementById('sg-time').value;sg.type=document.getElementById('sg-type').value;sg.active=true;try{localStorage.setItem('pb_sg',JSON.stringify(sg));}catch(e){}toast(T('announcedSaved'));renderAnnounce();}
 function clearSG(){sg.active=false;try{localStorage.setItem('pb_sg',JSON.stringify(sg));}catch(e){}toast(T('announcedCleared'));renderAnnounce();}
 function setSGS(n){sg.score=n;document.querySelectorAll('#sg-score-opts .win-opt').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===n));}
@@ -772,7 +779,7 @@ function renderAnnounce(){
   set('ann-date',sg.date||'—');set('ann-time',sg.time||'—');set('ann-rule',sg.winRule);
 }
 
-/* ══ 动态免密二维码生成器 ══ */
+/* ══ 二维码 ══ */
 let qrGenerated=false;
 function getJoinUrl(){return window.location.href.split('?')[0]+'?join=1';}
 function generateQR(){
@@ -793,25 +800,25 @@ function copyJoinUrl(){
 function fallbackCopy(text){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast(T('toastCopied'));}
 function downloadQR(){const img=document.querySelector('#qr-container img');if(!img)return;const a=document.createElement('a');a.href=img.src;a.download='pickleball-qr.png';a.click();}
 
-/* ══ 性别暂存与表单重置 ══ */
+/* ══ 性别 ══ */
 let selectedGender=null;
 function selectGender(g){selectedGender=g;document.getElementById('gender-m-btn').classList.toggle('active',g==='M');document.getElementById('gender-f-btn').classList.toggle('active',g==='F');}
 function resetSelfJoin(){document.getElementById('self-join-success').style.display='none';document.getElementById('self-join-card').style.display='block';}
 
-/* ══ SCOREBOARD 独立记分牌逻辑 ══ */
+/* ══ 独立记分牌 ══ */
 let sbState={sA:0,sB:0,serv:1,servNum:2,target:11,winType:'deuce',sys:'rally',tA:'A',tB:'B',hist:[],won:0};
 let sbTarget=11,sbWinType='deuce',sbSys='rally';
 function selST(n){sbTarget=n;document.querySelectorAll('#score-target-opts .win-opt').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===n));}
 function selWT(t){sbWinType=t;document.querySelectorAll('#win-type-opts .win-opt').forEach(b=>b.classList.toggle('active',b.onclick&&b.onclick.toString().includes("'"+t+"'")));}
 function selSS(s){sbSys=s;document.querySelectorAll('#score-sys-opts .win-opt').forEach(b=>b.classList.toggle('active',b.onclick&&b.onclick.toString().includes("'"+s+"'")));}
 
-/* ══ QUEUE 核心数据源定义 ══ */
+/* ══ QUEUE DEFAULT STATE ══ */
 const AB=['','#EAF3DE','#E6F1FB','#FAEEDA','#FCEBEB'];
 const AF=['','#3B6D11','#185FA5','#854F0B','#A32D2D'];
-let qState={queue:[],resting:[],courts:[{id:1,name:null,teams:null,startTime:null},{id:2,name:null,teams:null,startTime:null},{id:3,name:null,teams:null,startTime:null}],log:[],matchHistory:[],nextQid:1,nextCid:4,logFilter:'all',pendingCourtId:null};
+let qState={queue:[],resting:[],playingPlayers:[],courts:[{id:1,name:null,teams:null,startTime:null},{id:2,name:null,teams:null,startTime:null},{id:3,name:null,teams:null,startTime:null}],log:[],matchHistory:[],nextQid:1,nextCid:4,logFilter:'all',pendingCourtId:null};
 let pendingNextMatch=null;
 function cName(c){return c.name||(lang==='zh'?`${c.id}号球场`:`Court ${c.id}`);}
-function fmtT(t){const d=new Date(t);return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
+function fmtT(t){if(!t)return'—';const d=new Date(t);return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
 function mAgo(t){return T('minutesAgo',Math.round((Date.now()-t)/60000));}
 function mPlayed(t){return T('minutesPlayed',Math.round((Date.now()-t)/60000));}
 
@@ -829,7 +836,7 @@ function showQTab(tab){
 function renameCourt(id,v){const c=qState.courts.find(c=>c.id===id);if(c)c.name=v||null;saveQ();}
 function setQFilter(f){qState.logFilter=f;renderQLog();}
 function updateQStats(){
-  const playing=qState.courts.filter(c=>c.teams).length*4;const resting=(qState.resting||[]).length;
+  const playing=qState.courts.filter(c=>c.teams).length * (sg.type === 'Singles' ? 2 : 4);const resting=(qState.resting||[]).length;
   ['q-st-wait','q-st-play','q-st-rest'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[qState.queue.length,playing,resting][i];});
 }
 function exportQCSV(){
@@ -837,13 +844,12 @@ function exportQCSV(){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='queue-log.csv';a.click();
 }
 function exportQTxt(){
-  let txt=`Queue Log\n${new Date().toLocaleDateString()}\n${'─'.repeat(28)}\n\n`;
+  let txt=`Host mode Log\n${new Date().toLocaleDateString()}\n${'─'.repeat(28)}\n\n`;
   qState.log.forEach(e=>{txt+=`[${fmtT(e.time)}] ${e.type} · ${e.name} · ${e.note}\n`;});
   const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='queue-report.txt';a.click();
 }
 function renderQueue(){renderQWaiting();renderQCourts();renderQLog();renderQManage();updateQStats();renderAnnounce();if(document.getElementById('lookup-inp')?.value)qLookup();else renderLookupFull('');}
-
 
 /* ════════════════════════════════════════════════════════════ */
 /* 🔥 核心重构区域：SUPABASE 云端实时数据总线与高阶算法集成 🔥 */
@@ -853,20 +859,20 @@ const SUPABASE_URL = "https://lwwprihheumlhnglvbnh.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3d3ByaWhoZXVtbGhuZ2x2Ym5oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTc1MzcsImV4cCI6MjA5Nzk5MzUzN30.UD_1YlkzZl-6wtW9KxHkvAZxpqz9JE_e19ZKS2fYi2A";
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 全局状态变量：手动插队选人缓存池与首发保护锁
 let selectedPlayerIds = [];
 let isFirstGameServe = true;
 
-// 1. 全自动从 Supabase 云端拉取三张实体表的数据
 async function loadQ() {
   try {
     const { data: qData } = await _supabase.from('players_queue').select('*').eq('status', 'waiting').order('id', { ascending: true });
     const { data: rData } = await _supabase.from('players_queue').select('*').eq('status', 'resting').order('id', { ascending: true });
+    const { data: pData } = await _supabase.from('players_queue').select('*').eq('status', 'playing');
     const { data: cData } = await _supabase.from('courts_status').select('*').order('id', { ascending: true });
     const { data: lData } = await _supabase.from('activity_logs').select('*').order('id', { ascending: false }).limit(35);
 
     if (qData) qState.queue = qData;
     if (rData) qState.resting = rData;
+    if (pData) qState.playingPlayers = pData;
     if (cData) {
       qState.courts = cData.map(c => ({
         id: c.id,
@@ -881,10 +887,8 @@ async function loadQ() {
   } catch (e) { console.error("Supabase Sync Error:", e); }
 }
 
-// 空存根函数以兼容历史引用
 function saveQ() {}
 
-// 2. 挂载云端 Real-time 广播监听器
 function initRealtimeSync() {
   _supabase
     .channel('realtime-pickleball-channel')
@@ -894,7 +898,6 @@ function initRealtimeSync() {
     .subscribe();
 }
 
-// 3. 自助扫码登记：直接打入 Supabase
 async function selfJoin() {
   const name = document.getElementById('qr-name').value.trim();
   if (!name) { toast(lang === 'zh' ? '请输入名字' : 'Enter your name'); return; }
@@ -911,16 +914,14 @@ async function selfJoin() {
   }
 }
 
-// 4. 从队列移除玩家
 async function qRemove(id) {
-  const p = [...qState.queue, ...qState.resting].find(x => x.id === id);
+  const p = [...qState.queue, ...qState.resting, ...qState.playingPlayers].find(x => x.id === id);
   if (p) {
     await _supabase.from('activity_logs').insert([{ time: fmtT(Date.now()), name: p.name, type: 'leave', note: T('logLeave') }]);
     await _supabase.from('players_queue').delete().eq('id', id);
   }
 }
 
-// 5. 玩家从休息区重回排队区
 async function rejoin(id) {
   const p = qState.resting.find(x => x.id === id);
   if (p) {
@@ -930,52 +931,57 @@ async function rejoin(id) {
   }
 }
 
-// 6. 自动矩阵算法派场 (Auto-assign)
+/* 🚀 1. 自动配队系统：根据 Singles 动态适配 2人或4人开场 */
 async function autoAssign() {
   const fi = qState.courts.findIndex(c => !c.teams);
   if (fi < 0) { toast(T('toastNoFree')); return; }
-  if (qState.queue.length < 4) { toast(T('toastNeedFour')); return; }
+  
+  const mode = sg.type || 'Social';
+  const isSingles = (mode === 'Singles');
+  const reqPlayers = isSingles ? 2 : 4;
+
+  if (qState.queue.length < reqPlayers) {
+    toast(isSingles ? "当前是单打模式，等待人数不足 2 人" : T('toastNeedFour'));
+    return;
+  }
 
   const sorted = [...qState.queue].sort((a, b) => a.level - b.level);
-  const luckyFour = sorted.slice(0, 4);
-  const ids = luckyFour.map(p => p.id);
+  const luckyBatch = sorted.slice(0, reqPlayers);
+  const ids = luckyBatch.map(p => p.id);
   const targetCourt = qState.courts[fi];
+  const pNames = luckyBatch.map(p => p.name);
 
-  const pNames = luckyFour.map(p => p.name);
-  const tA = [pNames[0], pNames[3]];
-  const tB = [pNames[1], pNames[2]];
+  let tA = [], tB = [];
+  if (isSingles) {
+    tA = [pNames[0]]; tB = [pNames[1]];
+  } else {
+    tA = [pNames[0], pNames[3]]; tB = [pNames[1], pNames[2]];
+  }
 
   const { error } = await _supabase.from('courts_status').update({
-    status: 'Occupied',
-    team_a: tA,
-    team_b: tB,
-    score_a: 0,
-    score_b: 0,
-    server_number: 2,
-    serving_team: 'A',
-    is_first_serve: true,
-    updated_at: new Date()
+    status: 'Occupied', team_a: tA, team_b: tB, score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true, updated_at: new Date()
   }).eq('id', targetCourt.id);
 
   if (!error) {
-    await _supabase.from('players_queue').delete().in('id', ids);
+    await _supabase.from('players_queue').update({ status: 'playing' }).in('id', ids);
     await _supabase.from('activity_logs').insert([{
       time: fmtT(Date.now()), name: 'System', type: 'assign',
-      note: `${cName(targetCourt)} · ${tA.join('/')} vs ${tB.join('/')}`
+      note: `${cName(targetCourt)} [${mode}] · ${tA.join('/')} vs ${tB.join('/')}`
     }]);
-    toast(T('toastAssigned'));
-    showQTab('courts');
+    toast(T('toastAssigned')); showQTab('courts');
   }
 }
 
-// 7. 【新增功能】“人情世故”手动勾选插队功能机制
+/* 🚀 2. 手动插队逻辑：根据不同游戏模式自动适配点按选择上限 */
 function togglePlayerSelection(id) {
   if (!isAdmin()) return;
+  const mode = sg.type || 'Social';
+  const reqPlayers = (mode === 'Singles') ? 2 : 4;
   const idx = selectedPlayerIds.indexOf(id);
   if (idx >= 0) selectedPlayerIds.splice(idx, 1);
   else {
-    if (selectedPlayerIds.length >= 4) {
-      toast(lang === 'zh' ? '最多只能选择 4 人' : 'Max 4 players allowed');
+    if (selectedPlayerIds.length >= reqPlayers) {
+      toast(lang === 'zh' ? `当前模式只需选择 ${reqPlayers} 人` : `Max ${reqPlayers} players allowed`);
       return;
     }
     selectedPlayerIds.push(id);
@@ -990,53 +996,60 @@ function clearManualSelection() {
 
 async function manualAssignToCourt(courtId) {
   if (!isAdmin()) return;
-  if (selectedPlayerIds.length !== 4) {
-    toast(lang === 'zh' ? '必须选满 4 人才能强行开局' : 'Must select exactly 4 players');
+  const mode = sg.type || 'Social';
+  const isSingles = (mode === 'Singles');
+  const reqPlayers = isSingles ? 2 : 4;
+
+  if (selectedPlayerIds.length !== reqPlayers) {
+    toast(lang === 'zh' ? `必须选满 ${reqPlayers} 人才能强行开局` : `Must select exactly ${reqPlayers} players`);
     return;
   }
-  const c = qState.courts.find(x => x.id === courtId);
-  if (!c) return;
+  const c = qState.courts.find(x => x.id === courtId); if (!c) return;
 
   const selectedPlayers = qState.queue.filter(p => selectedPlayerIds.includes(p.id));
-  if (selectedPlayers.length !== 4) { toast(lang === 'zh' ? '同步数据异常' : 'Sync error'); clearManualSelection(); return; }
+  if (selectedPlayers.length !== reqPlayers) { toast('Sync error'); clearManualSelection(); return; }
 
   const pNames = selectedPlayers.map(p => p.name);
-  const tA = [pNames[0], pNames[1]];
-  const tB = [pNames[2], pNames[3]];
+  let tA = [], tB = [];
+  if (isSingles) {
+    tA = [pNames[0]]; tB = [pNames[1]];
+  } else {
+    tA = [pNames[0], pNames[1]]; tB = [pNames[2], pNames[3]];
+  }
 
   const { error } = await _supabase.from('courts_status').update({
     status: 'Occupied', team_a: tA, team_b: tB, score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true, updated_at: new Date()
   }).eq('id', courtId);
 
   if (!error) {
-    await _supabase.from('players_queue').delete().in('id', selectedPlayerIds);
+    await _supabase.from('players_queue').update({ status: 'playing' }).in('id', selectedPlayerIds);
     await _supabase.from('activity_logs').insert([{
       time: fmtT(Date.now()), name: adminState.currentAdmin || 'System', type: 'assign',
-      note: `[手动调配] ${cName(c)} · ${tA.join('/')} vs ${tB.join('/')}`
+      note: `[手动调配] ${cName(c)} [${mode}] · ${tA.join('/')} vs ${tB.join('/')}`
     }]);
-    toast(T('toastAssigned'));
-    clearManualSelection();
-    showQTab('courts');
+    toast(T('toastAssigned')); clearManualSelection(); showQTab('courts');
   }
 }
 
-// 8. 彻底重构等候队列区（融入主理人控制悬浮台）
+/* 🚀 3. 爆改并重构等候队列区面板渲染 */
 function renderQWaiting() {
   const el = document.getElementById('q-list'); if (!el) return;
   let panelHtml = '';
+  const mode = sg.type || 'Social';
+  const reqPlayers = (mode === 'Singles') ? 2 : 4;
 
   if (isAdmin() && selectedPlayerIds.length > 0) {
-    const ready = selectedPlayerIds.length === 4;
+    const ready = selectedPlayerIds.length === reqPlayers;
     panelHtml = `
       <div class="card" style="background: var(--info-bg); border: 1px solid var(--info-text); padding: 12px; margin-bottom: 12px; border-radius: var(--radius-lg);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <span style="font-size: 13px; font-weight: 700; color: var(--info-text);">🎯 特殊调节配队 (${selectedPlayerIds.length} / 4)</span>
+          <span style="font-size: 13px; font-weight: 700; color: var(--info-text);">🎯 Host Mode 手动特殊配队 [当前模式: ${mode}] (${selectedPlayerIds.length} / ${reqPlayers} 人)</span>
           <button class="btn btn-sm btn-d" style="padding: 2px 8px; font-size: 11px;" onclick="clearManualSelection()">取消</button>
         </div>
         <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;">
           ${selectedPlayerIds.map((id, idx) => {
             const p = qState.queue.find(x => x.id === id);
-            return p ? `<span class="pill" style="background: var(--bg); color: var(--text); border: 0.5px solid var(--border2); padding: 4px 8px;">${idx < 2 ? 'A队' : 'B队'}: <b>${p.name}</b></span>` : '';
+            return p ? `<span class="pill" style="background: var(--bg); color: var(--text); border: 0.5px solid var(--border2); padding: 4px 8px;">${mode==='Singles'?(idx===0?'A选手':'B选手'):(idx < 2 ? 'A队' : 'B队')}: <b>${p.name}</b></span>` : '';
           }).join('')}
         </div>
         ${ready ? `
@@ -1049,7 +1062,7 @@ function renderQWaiting() {
               }).join('')}
             </div>
           </div>
-        ` : `<div style="font-size: 11px; color: var(--text2); font-style: italic;">请继续勾选凑齐4位球员...</div>`}
+        ` : `<div style="font-size: 11px; color: var(--text2); font-style: italic;">请在大名单中继续点选凑齐人数...</div>`}
       </div>`;
   }
 
@@ -1076,7 +1089,6 @@ function renderQWaiting() {
       </div>`;
   }).join('') + '</div>';
 
-  // 渲染底栏休息队列
   const rs = document.getElementById('rest-section'), rl = document.getElementById('rest-list');
   const resting = qState.resting || []; if (rs) rs.style.display = resting.length ? 'block' : 'none';
   if (rl && resting.length) rl.innerHTML = `<div class="card" style="padding:0 12px">` + resting.map(p => `
@@ -1093,84 +1105,47 @@ function renderQWaiting() {
     </div>`).join('') + '</div>';
 }
 
-// 9. 🏓 独立大记分牌：完全打通职业双发球权倒手状态机 (0-0-2)
-function startScoreboard(){
-  const tA_name = document.getElementById('sb-team1').value || 'A';
-  const tB_name = document.getElementById('sb-team2').value || 'B';
-  
-  isFirstGameServe = true; 
-  sbState = {
-    sA: 0, sB: 0, serv: 1, 
-    servNum: sbSys === '002' ? 2 : 1, // 开局保护直接标记为 2 号发球手！
-    target: sbTarget, winType: sbWinType, sys: sbSys, tA: tA_name, tB: tB_name, hist: [], won: 0
-  };
-  document.getElementById('score-setup-area').style.display = 'none';
-  document.getElementById('scoreboard-area').style.display = 'block';
-  document.getElementById('sb-win-banner').style.display = 'none';
-  renderSB();
+/* 🚀 4. 彻底修复 End Game 数据类型卡死、加入精准开始时间显示 */
+function renderQCourts(){
+  const el=document.getElementById('courts-list');if(!el)return;
+  el.innerHTML=qState.courts.map(c=>`<div class="court-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${c.teams?'8px':'0'}">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="width:8px;height:8px;border-radius:50%;background:${c.teams?'#63A322':'#888'};display:inline-block"></span>
+        <span style="font-size:15px;font-weight:600">${cName(c)}</span>
+      </div>
+      ${c.teams?`<button class="btn btn-sm" onclick="finishCourt(${c.id})"><i class="ti ti-check"></i> ${T('courtEnd')}</button>`:`<span style="font-size:13px;color:var(--text2)">${T('courtFree')}</span>`}
+    </div>
+    ${c.teams?`<div class="teams-grid"><div class="team-box"><div class="tl2">A</div>${c.teams[0].map(name=>`<div class="tp2">${name}</div>`).join('')}</div><div style="font-size:16px;font-weight:700;color:var(--text2);text-align:center">VS</div><div class="team-box"><div class="tl2">B</div>${c.teams[1].map(name=>`<div class="tp2">${name}</div>`).join('')}</div></div>
+    <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+      <i class="ti ti-clock" style="font-size:13px"></i> 开始时间: <b>${fmtT(c.startTime)}</b> (${mPlayed(c.startTime)})
+    </div>`:''}
+  </div>`).join('');
 }
 
-function sbPoint(team) {
-  if (sbState.won) return;
-  // 002系统底层逻辑：接球方赢球不加分，直接消耗发球方的次数
-  if (sbState.sys === '002' && team !== sbState.serv) { sbFault(); return; }
-
-  const snap = JSON.stringify(sbState);
-  if (team === 1) sbState.sA++; else sbState.sB++;
-  sbState.hist.push({ snap, act: `+1 → ${team === 1 ? sbState.tA : sbState.tB}` });
-  checkSBWin();
-  renderSB();
-}
-
-function sbFault() {
-  if (sbState.won) return;
-  const snap = JSON.stringify(sbState);
-
-  if (sbState.sys === '002') {
-    if (isFirstGameServe) {
-      // 开局保护特例：首局发球方失误后不换队友，直接 Side-out 互换阵营
-      sbState.serv = sbState.serv === 1 ? 2 : 1;
-      sbState.servNum = 1;
-      isFirstGameServe = false;
-    } else {
-      if (sbState.servNum === 1) {
-        sbState.servNum = 2; // 1号发球手阵亡 ➔ 换同队2号发球
-      } else {
-        sbState.serv = sbState.serv === 1 ? 2 : 1; // 2号也阵亡 ➔ 彻底换队发球
-        sbState.servNum = 1;
-      }
-    }
-  } else {
-    sbState.serv = sbState.serv === 1 ? 2 : 1;
-  }
-
-  sbState.hist.push({ snap, act: sbState.sys === '002' ? 'Fault ➔ 转移发球权' : 'Side out' });
-  renderSB();
-}
-
-// 10. 给新增球场增加云端落表指令
-async function addCourt(){
-  const customName = `Court ${qState.courts.length + 1}`;
-  await _supabase.from('courts_status').insert([{ court_name: customName, status: 'Available' }]);
-  toast(T('qBtnAddCourt'));
-}
-
-async function deleteCourt(id){
-  const c = qState.courts.find(c => c.id === id);
-  if (c && c.teams) { toast(lang==='zh'?'球场使用中':'Court in use'); return; }
-  await _supabase.from('courts_status').delete().eq('id', id);
-}
-
-// 11. 结算比赛下场：同步将队员信息刷入 Supabase players_queue
 function finishCourt(courtId) {
   if (!isAdmin()) { toast(T('adminRequired')); return; }
   const c = qState.courts.find(c => c.id === courtId); if (!c || !c.teams) return;
   qState.pendingCourtId = courtId;
-  const players = [...c.teams[0], ...c.teams[1]];
-  document.getElementById('go-ta').textContent = c.teams[0].map(p => p.name).join(' / ');
-  document.getElementById('go-tb').textContent = c.teams[1].map(p => p.name).join(' / ');
+  
+  const pool = qState.playingPlayers || [];
+  const findProfile = (name) => pool.find(x => x.name === name) || { id: Date.now() + Math.random(), name: name, gender: 'M', level: 2 };
+  
+  const teamA_profiles = c.teams[0].map(name => findProfile(name));
+  const teamB_profiles = c.teams[1].map(name => findProfile(name));
+  const players = [...teamA_profiles, ...teamB_profiles];
+  window._activeCourtProfiles = players; 
+
+  document.getElementById('go-ta').textContent = teamA_profiles.map(p => p.name).join(' / ');
+  document.getElementById('go-tb').textContent = teamB_profiles.map(p => p.name).join(' / ');
   document.getElementById('final-a').value = ''; document.getElementById('final-b').value = '';
-  document.getElementById('go-court-info').textContent = cName(c);
+  
+  document.getElementById('go-court-info').innerHTML = `
+    <b style="font-size:16px;display:block;margin-bottom:2px">${cName(c)}</b>
+    <span style="font-size:12px;opacity:0.8;display:inline-flex;align-items:center;gap:3px">
+      <i class="ti ti-clock"></i> 对局时间线: ${fmtT(c.startTime)} ➔ ${fmtT(Date.now())}
+    </span>
+  `;
 
   window._PS = {};
   document.getElementById('go-status-list').innerHTML = players.map(p => `
@@ -1188,42 +1163,178 @@ function finishCourt(courtId) {
   openModal('modal-game-over');
 }
 
+/* 🚀 5. 下场结算数据锁：保存胜负关系，全面支撑 4-10 高阶游戏流转规则 */
 async function confirmGameOver() {
   const courtId = qState.pendingCourtId; const c = qState.courts.find(c => c.id === courtId); if (!c) return;
-  const players = [...c.teams[0], ...c.teams[1]];
+  const players = window._activeCourtProfiles || [];
   const sa = parseInt(document.getElementById('final-a').value) || 0;
   const sb = parseInt(document.getElementById('final-b').value) || 0;
+  const mins = Math.round((Date.now() - c.startTime) / 60000);
+
+  // 计算并追踪赢家、输家，用于 King Stay 和 2in2out 赢家留场拆伙等机制
+  let winners = [], losers = [];
+  if (sa > sb) { winners = c.teams[0]; losers = c.teams[1]; } 
+  else { winners = c.teams[1]; losers = c.teams[0]; }
+  
+  window._lastWinners = winners.map(name => players.find(p => p.name === name)).filter(Boolean);
+  window._lastLosers = losers.map(name => players.find(p => p.name === name)).filter(Boolean);
 
   // 清空云端球场占用
   await _supabase.from('courts_status').update({ status: 'Available', team_a: [], team_b: [], score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true }).eq('id', courtId);
 
-  // 循环恢复每个人的等待/休息状态推上 Supabase
+  // 全自动把球员放回队列或休息区
   for (const p of players) {
     const nextStatus = (window._PS[p.id] || 'c') === 'r' ? 'resting' : 'waiting';
-    await _supabase.from('players_queue').insert([{ name: p.name, gender: p.gender, level: String(p.level), status: nextStatus }]);
+    await _supabase.from('players_queue').update({ status: nextStatus }).eq('id', p.id);
   }
 
-  await _supabase.from('activity_logs').insert([{ time: fmtT(Date.now()), name: 'System', type: 'done', note: `${cName(c)} 比赛结束 (${sa}:${sb})` }]);
+  const logNote = `${cName(c)} [${sg.type || 'Social'}] (${sa}:${sb}) | ⏰ ${fmtT(c.startTime)} - ${fmtT(Date.now())} (${mins}分钟)`;
+  await _supabase.from('activity_logs').insert([{ time: fmtT(Date.now()), name: 'System', type: 'done', note: logNote }]);
+  
   closeModal('modal-game-over'); toast(T('toastCourtDone'));
   setTimeout(() => suggestNext(courtId), 350);
 }
 
+/* 🚀 6. 智能下一场引擎：全量内置 4-10 种特色游戏模式的核心对阵分配逻辑 */
+function suggestNext(courtId){
+  const mode = sg.type || 'Social';
+  const c = qState.courts.find(c => c.id === courtId); if (!c) return;
+  
+  let suggestedPlayers = [];
+  let tA = [], tB = [];
+  
+  // 过滤掉下场时主动勾选去“休息区”的玩家
+  const activeWinners = (window._lastWinners || []).filter(p => window._PS && window._PS[p.id] !== 'r');
+  
+  // ── 核心分支：单打模式只抽2人 ──
+  if (mode === 'Singles') {
+    if (qState.queue.length < 2) return;
+    tA = [qState.queue[0]]; tB = [qState.queue[1]];
+    suggestedPlayers = [...tA, ...tB];
+  } 
+  // ── 核心分支：King Stay 擂台赛 (赢家继续组队坐镇A队，从队列抓2人挑战) ──
+  else if (mode === 'King Stay' && activeWinners.length === 2) {
+    if (qState.queue.length < 2) return;
+    tA = [...activeWinners];
+    tB = [qState.queue[0], qState.queue[1]];
+    suggestedPlayers = [...tA, ...tB];
+  } 
+  // ── 核心分支：2in 2out Winner Stay (赢家留下但必须拆伙，各带一个队列新人) ──
+  else if (mode === '2in 2out Winner Stay' && activeWinners.length === 2) {
+    if (qState.queue.length < 2) return;
+    tA = [activeWinners[0], qState.queue[0]];
+    tB = [activeWinners[1], qState.queue[1]];
+    suggestedPlayers = [activeWinners[0], qState.queue[0], activeWinners[1], qState.queue[1]];
+  } 
+  // ── 常规分支：Doubles / Social / Round Robin / 4in4out ──
+  else {
+    if (qState.queue.length < 4) return;
+    const q = [...qState.queue];
+    const lim = Math.min(q.length, 8);
+    const pk = (a,b) => [a,b].sort().join('|');
+    const hist = qState.matchHistory || [];
+    let best = null, bestSc = Infinity;
+    
+    for(let a=0; a<lim; a++)
+      for(let b=a+1; b<lim; b++)
+        for(let cc=b+1; cc<lim; cc++)
+          for(let d=cc+1; d<lim; d++){
+            const g = [q[a], q[b], q[cc], q[d]]; let sc = 0;
+            for(let i=0; i<4; i++) for(let j=i+1; j<4; j++) { const k = pk(g[i].id, g[j].id); sc += hist.filter(h=>h===k).length; }
+            sc -= g.reduce((s,p) => s + (Date.now() - p.joinTime), 0) / 600000;
+            if(sc < bestSc){ bestSc = sc; best = g; }
+          }
+    if (!best) best = q.slice(0, 4);
+    tA = [best[0], best[3]]; tB = [best[1], best[2]];
+    suggestedPlayers = best;
+  }
+  
+  pendingNextMatch = { courtId, players: suggestedPlayers, tA, tB };
+  
+  document.getElementById('next-match-content').innerHTML = `
+    <div style="font-size:12px; color:var(--text2); margin-bottom:10px">${T('avoidRepeat')} [Host 推荐模式: ${mode}]</div>
+    <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:center">
+      <div style="background:var(--bg2); border-radius:var(--radius); padding:10px; text-align:center">
+        ${tA.map(p => `<div style="font-size:14px; font-weight:500; padding:2px 0">${p.name}</div>`).join('')}
+      </div>
+      <div style="font-size:18px; font-weight:700; color:var(--text2)">VS</div>
+      <div style="background:var(--bg2); border-radius:var(--radius); padding:10px; text-align:center">
+        ${tB.map(p => `<div style="font-size:14px; font-weight:500; padding:2px 0">${p.name}</div>`).join('')}
+      </div>
+    </div>`;
+  openModal('modal-next-match');
+}
+
+async function confirmNextMatch(){
+  if(!pendingNextMatch)return;
+  const { courtId, players, tA, tB } = pendingNextMatch;
+  const c = qState.courts.find(c => c.id === courtId); if (!c) { closeModal('modal-next-match'); return; }
+  
+  const tANames = tA.map(p => p.name); const tBNames = tB.map(p => p.name);
+  const allPlayerIds = players.map(p => p.id);
+
+  const { error } = await _supabase.from('courts_status').update({
+    status: 'Occupied', team_a: tANames, team_b: tBNames, score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true, updated_at: new Date()
+  }).eq('id', courtId);
+
+  if(!error) {
+    await _supabase.from('players_queue').update({ status: 'playing' }).in('id', allPlayerIds);
+    await _supabase.from('activity_logs').insert([{ 
+      time: fmtT(Date.now()), name: 'System', type: 'assign', 
+      note: `${cName(c)} [Host自动流转] · ${tANames.join('/')} vs ${tBNames.join('/')}` 
+    }]);
+    toast(T('toastAssigned')); closeModal('modal-next-match'); pendingNextMatch = null;
+  }
+}
+
+async function addCourt(){
+  const customName = `Court ${qState.courts.length + 1}`;
+  await _supabase.from('courts_status').insert([{ court_name: customName, status: 'Available' }]);
+  toast(T('qBtnAddCourt'));
+}
+
+async function deleteCourt(id){
+  const c = qState.courts.find(c => c.id === id);
+  if (c && c.teams) { toast(lang==='zh'?'球场使用中':'Court in use'); return; }
+  await _supabase.from('courts_status').delete().eq('id', id);
+}
 
 /* ════════════════════════════════════════════════════════════ */
-/* 🧱 以下完全保留您大联盟级别的排队看板渲染、选人、赛程算法 🧱 */
+/* 🧱 以下完全保留您原汁原味的大联盟选秀系统、独立记分器渲染 🧱 */
 /* ════════════════════════════════════════════════════════════ */
 
+function startScoreboard(){
+  const tA_name = document.getElementById('sb-team1').value || 'A';
+  const tB_name = document.getElementById('sb-team2').value || 'B';
+  isFirstGameServe = true; 
+  sbState = { sA: 0, sB: 0, serv: 1, servNum: sbSys === '002' ? 2 : 1, target: sbTarget, winType: sbWinType, sys: sbSys, tA: tA_name, tB: tB_name, hist: [], won: 0 };
+  document.getElementById('score-setup-area').style.display = 'none';
+  document.getElementById('scoreboard-area').style.display = 'block';
+  document.getElementById('sb-win-banner').style.display = 'none';
+  renderSB();
+}
+function sbPoint(team) {
+  if (sbState.won) return;
+  if (sbState.sys === '002' && team !== sbState.serv) { sbFault(); return; }
+  const snap = JSON.stringify(sbState);
+  if (team === 1) sbState.sA++; else sbState.sB++;
+  sbState.hist.push({ snap, act: `+1 → ${team === 1 ? sbState.tA : sbState.tB}` });
+  checkSBWin(); renderSB();
+}
+function sbFault() {
+  if (sbState.won) return; const snap = JSON.stringify(sbState);
+  if (sbState.sys === '002') {
+    if (isFirstGameServe) { sbState.serv = sbState.serv === 1 ? 2 : 1; sbState.servNum = 1; isFirstGameServe = false; } 
+    else { if (sbState.servNum === 1) { sbState.servNum = 2; } else { sbState.serv = sbState.serv === 1 ? 2 : 1; sbState.servNum = 1; } }
+  } else { sbState.serv = sbState.serv === 1 ? 2 : 1; }
+  sbState.hist.push({ snap, act: sbState.sys === '002' ? 'Fault ➔ 转移发球权' : 'Side out' });
+  renderSB();
+}
 function sbUndo(){
-  if(!sbState.hist.length)return;
-  const last=sbState.hist.pop();
-  const prev=JSON.parse(last.snap);prev.hist=sbState.hist;
-  sbState=prev;sbState.won=0;
-  document.getElementById('sb-win-banner').style.display='none';renderSB();
+  if(!sbState.hist.length)return; const last=sbState.hist.pop(); const prev=JSON.parse(last.snap);prev.hist=sbState.hist;
+  sbState=prev;sbState.won=0; document.getElementById('sb-win-banner').style.display='none';renderSB();
 }
-function resetSB(){
-  sbState.won=0;document.getElementById('score-setup-area').style.display='block';
-  document.getElementById('scoreboard-area').style.display='none';document.getElementById('sb-win-banner').style.display='none';
-}
+function resetSB(){ sbState.won=0;document.getElementById('score-setup-area').style.display='block'; document.getElementById('scoreboard-area').style.display='none';document.getElementById('sb-win-banner').style.display='none'; }
 function checkSBWin(){
   const a=sbState.sA,b=sbState.sB,t=sbState.target; let w=0;
   if(sbState.winType==='deuce'){if(a>=t&&a-b>=2)w=1;else if(b>=t&&b-a>=2)w=2;}
@@ -1232,133 +1343,18 @@ function checkSBWin(){
   if(w){sbState.won=w;document.getElementById('sb-win-banner').style.display='block';document.getElementById('sb-win-text').textContent=T('sbWin',w===1?sbState.tA:sbState.tB);}
 }
 function renderSB(){
-  const s=sbState;
-  document.getElementById('sb-n1').textContent=s.tA;document.getElementById('sb-n2').textContent=s.tB;
+  const s=sbState; document.getElementById('sb-n1').textContent=s.tA;document.getElementById('sb-n2').textContent=s.tB;
   document.getElementById('sb-s1').textContent=s.sA;document.getElementById('sb-s2').textContent=s.sB;
   document.getElementById('sb-btn1-lbl').textContent=s.tA;document.getElementById('sb-btn2-lbl').textContent=s.tB;
   const sv1=document.getElementById('sb-sv1'),sv2=document.getElementById('sb-sv2');
   const sn1=document.getElementById('sb-sn1'),sn2=document.getElementById('sb-sn2');
   if(sv1)sv1.textContent=s.serv===1?(lang==='zh'?'▶ 发球中':'▶ Serving'):'';
   if(sv2)sv2.textContent=s.serv===2?(lang==='zh'?'▶ 发球中':'▶ Serving'):'';
-  if(s.sys==='002'){
-    const snLabel=lang==='zh'?`发球员 #${s.servNum}`:`Server #${s.servNum}`;
-    if(sn1)sn1.textContent=s.serv===1?snLabel:'';if(sn2)sn2.textContent=s.serv===2?snLabel:'';
+  if(s.sys==='002'){ const snLabel=lang==='zh'?`发球员 #${s.servNum}`:`Server #${s.servNum}`; if(sn1)sn1.textContent=s.serv===1?snLabel:'';if(sn2)sn2.textContent=s.serv===2?snLabel:'';
   }else{if(sn1)sn1.textContent='';if(sn2)sn2.textContent='';}
   const callout=document.getElementById('sb-callout');
   if(callout){if(s.sys==='002')callout.textContent=`${s.sA} - ${s.sB} - ${s.servNum}`;else callout.textContent=`${s.sA} - ${s.sB}`;}
-  const h=document.getElementById('sb-hist');
-  if(h)h.innerHTML=[...s.hist].reverse().slice(0,8).map(e=>`<div class="sb-hist-row">${e.act}</div>`).join('');
-}
-
-function setPS(id,s){window._PS[id]=s;hlPS(id,s);}
-function hlPS(id,s){
-  const cb=document.getElementById('sc-'+id),rb=document.getElementById('sr-'+id);
-  if(cb)cb.classList.toggle('btn-p',s==='c');if(rb)rb.classList.toggle('btn-p',s==='r');
-}
-
-function suggestNext(courtId){
-  if(qState.queue.length<4)return;
-  const pk=(a,b)=>[a,b].sort().join('|');const hist=qState.matchHistory||[];
-  const q=[...qState.queue];let best=null,bestSc=Infinity;const lim=Math.min(q.length,8);
-  for(let a=0;a<lim;a++)for(let b=a+1;b<lim;b++)for(let cc=b+1;cc<lim;cc++)for(let d=cc+1;d<lim;d++){
-    const g=[q[a],q[b],q[cc],q[d]];let sc=0;
-    for(let i=0;i<4;i++)for(let j=i+1;j<4;j++){const k=pk(g[i].id,g[j].id);sc+=hist.filter(h=>h===k).length;}
-    sc-=g.reduce((s,p)=>s+(Date.now()-p.joinTime),0)/600000;
-    if(sc<bestSc){bestSc=sc;best=g;}
-  }
-  if(!best)return;
-  pendingNextMatch={courtId,players:best};
-  const tA=[best[0],best[3]],tB=[best[1],best[2]];
-  document.getElementById('next-match-content').innerHTML=`
-    <div style="font-size:12px;color:var(--text2);margin-bottom:10px">${T('avoidRepeat')}</div>
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center">
-      <div style="background:var(--bg2);border-radius:var(--radius);padding:10px;text-align:center">${tA.map(p=>`<div style="font-size:14px;font-weight:500;padding:2px 0">${p.name}</div>`).join('')}</div>
-      <div style="font-size:18px;font-weight:700;color:var(--text2)">VS</div>
-      <div style="background:var(--bg2);border-radius:var(--radius);padding:10px;text-align:center">${tB.map(p=>`<div style="font-size:14px;font-weight:500;padding:2px 0">${p.name}</div>`).join('')}</div>
-    </div>`;
-  openModal('modal-next-match');
-}
-
-async function confirmNextMatch(){
-  if(!pendingNextMatch)return;const{courtId,players}=pendingNextMatch;
-  const c=qState.courts.find(c=>c.id===courtId);if(!c){closeModal('modal-next-match');return;}
-  const ids=players.map(p=>p.id);
-  const pNames=players.map(p=>p.name);
-  const tA=[pNames[0],pNames[3]],tB=[pNames[1],pNames[2]];
-
-  const { error } = await _supabase.from('courts_status').update({
-    status: 'Occupied', team_a: tA, team_b: tB, score_a: 0, score_b: 0, server_number: 2, serving_team: 'A', is_first_serve: true, updated_at: new Date()
-  }).eq('id', courtId);
-
-  if(!error) {
-    await _supabase.from('players_queue').delete().in('id', ids);
-    await _supabase.from('activity_logs').insert([{ time: fmtT(Date.now()), name: 'System', type: 'assign', note: `${cName(c)} · ${pNames[0]}/${pNames[3]} vs ${pNames[1]}/${pNames[2]}` }]);
-    toast(T('toastAssigned'));closeModal('modal-next-match');pendingNextMatch=null;
-  }
-}
-
-function qLookup(){
-  const q=document.getElementById('lookup-inp').value.trim().toLowerCase();
-  const res=document.getElementById('lookup-result');
-  if(!q){res.innerHTML='';renderLookupFull('');return;}
-  const idx=qState.queue.findIndex(p=>p.name.toLowerCase().includes(q));
-  if(idx<0){res.innerHTML=`<div style="padding:10px;color:var(--text2);font-size:13px">${T('notFound',q)}</div>`;renderLookupFull('');return;}
-  const p=qState.queue[idx];const pos=idx+1;const tot=qState.queue.length;const est=pos<=1?0:Math.round((pos-1)*15);
-  res.innerHTML=`<div style="text-align:center;padding:12px;background:var(--bg2);border-radius:var(--radius)">
-    <div style="font-size:48px;font-weight:700;color:${pos===1?'#1D9E75':pos<=3?'#185FA5':'var(--text)'};line-height:1">${pos}</div>
-    <div style="font-size:13px;color:var(--text2);margin:4px 0 10px">${T('posLabel',pos,tot)}</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-      <div class="sc"><div class="sn" style="font-size:17px">{pos}</div><div class="sl">${lang==='zh'?'排名':'Rank'}</div></div>
-      <div class="sc"><div class="sn" style="font-size:16px">~${est}m</div><div class="sl">${T('estWait')}</div></div>
-      <div class="sc"><div class="sn" style="font-size:13px">${mAgo(p.joinTime)}</div><div class="sl">${T('alreadyWait')}</div></div>
-    </div>
-    ${pos===1?`<div style="margin-top:8px;padding:7px;background:var(--success-bg);color:var(--success-text);border-radius:var(--radius);font-size:13px;font-weight:600">${T('readyMsg')}</div>`:''}
-  </div>`;
-  renderLookupFull(q);
-}
-function renderLookupFull(h){
-  const el=document.getElementById('lookup-full-list');if(!el)return;
-  if(!qState.queue.length){el.innerHTML=`<div class="empty">${lang==='zh'?'暂无等待玩家':'No players waiting'}</div>`;return;}
-  el.innerHTML=qState.queue.map((p,i)=>{const me=h&&p.name.toLowerCase().includes(h.toLowerCase());
-    return`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)">
-      <span style="font-size:13px;font-weight:600;min-width:20px;color:${me?'var(--info-text)':'var(--text2)'}">${i+1}</span>
-      <div class="av" style="background:${AB[p.level]};color:${AF[p.level]}">${p.name.slice(0,2)}</div>
-      <div style="flex:1">
-        <div style="font-size:14px;font-weight:500">${p.name} <span class="pill pl${p.level}">${T('levels')[p.level]}</span>${p.gender?` <span class="pill ${p.gender==='M'?'pm':'pf'}">${T(p.gender==='M'?'male':'female')}</span>`:''} ${me?`<span class="pill" style="background:var(--info-bg);color:var(--info-text)">${lang==='zh'?'你':'You'}</span>`:''}</div>
-        <div style="font-size:12px;color:var(--text2)">${mAgo(p.joinTime)}</div>
-      </div>
-    </div>`;}).join('');
-}
-
-function renderQCourts(){
-  const el=document.getElementById('courts-list');if(!el)return;
-  el.innerHTML=qState.courts.map(c=>`<div class="court-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${c.teams?'8px':'0'}">
-      <div style="display:flex;align-items:center;gap:6px">
-        <span style="width:8px;height:8px;border-radius:50%;background:${c.teams?'#63A322':'#888'};display:inline-block"></span>
-        <span style="font-size:15px;font-weight:600">${cName(c)}</span>
-      </div>
-      ${c.teams?`<button class="btn btn-sm" onclick="finishCourt(${c.id})"><i class="ti ti-check"></i> ${T('courtEnd')}</button>`:`<span style="font-size:13px;color:var(--text2)">${T('courtFree')}</span>`}
-    </div>
-    ${c.teams?`<div class="teams-grid"><div class="team-box"><div class="tl2">A</div>${c.teams[0].map(name=>`<div class="tp2">${name}</div>`).join('')}</div><div style="font-size:16px;font-weight:700;color:var(--text2);text-align:center">VS</div><div class="team-box"><div class="tl2">B</div>${c.teams[1].map(name=>`<div class="tp2">${name}</div>`).join('')}</div></div><div style="font-size:12px;color:var(--text2)">${mPlayed(c.startTime)}</div>`:''}
-  </div>`).join('');
-}
-function renderQLog(){
-  const body=document.getElementById('log-body');if(!body)return;
-  const bg={join:'#E1F5EE',assign:'#E6F1FB',done:'#EAF3DE',leave:'#FCEBEB',rejoin:'#FAEEDA'};
-  const cl={join:'#085041',assign:'#0C447C',done:'#27500A',leave:'#791F1F',rejoin:'#633806'};
-  const tl2={join:T('logJoin'),assign:T('logAssign'),done:T('logDone'),leave:T('logLeave'),rejoin:T('logRejoin')};
-  const filtered=qState.logFilter==='all'?qState.log:qState.log.filter(e=>e.type===qState.logFilter);
-  body.innerHTML=[...filtered].reverse().map(e=>`<tr>
-    <td style="padding:7px 8px;border-bottom:0.5px solid var(--border);color:var(--text2);white-space:nowrap">${fmtT(e.time)}</td>
-    <td style="padding:7px 8px;border-bottom:0.5px solid var(--border);font-weight:500">${e.name}</td>
-    <td style="padding:7px 8px;border-bottom:0.5px solid var(--border)"><span class="pill" style="background:${bg[e.type]||'var(--bg2)'};color:${cl[e.type]||'var(--text2)'}">${tl2[e.type]||e.type}</span></td>
-    <td style="padding:7px 8px;border-bottom:0.5px solid var(--border);font-size:12px;color:var(--text2)">${e.note}</td>
-  </tr>`).join('');
-  const fr=document.getElementById('log-filter-row');
-  if(fr){const types=['all','join','assign','done','leave','rejoin'];const labels=[T('filterAll'),T('logJoin'),T('logAssign'),T('logDone'),T('logLeave'),T('logRejoin')];
-  fr.innerHTML=types.map((tp,i)=>`<button onclick="setQFilter('${tp}')" style="font-size:12px;padding:4px 10px;border-radius:999px;cursor:pointer;border:0.5px solid var(--border2);font-family:var(--font);background:${qState.logFilter===tp?'var(--text)':'var(--bg2)'};color:${qState.logFilter===tp?'var(--bg)':'var(--text2)'}">${labels[i]}</button>`).join('');}
-  ['log-total','log-games','log-active'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[qState.log.filter(e=>e.type==='join').length,qState.log.filter(e=>e.type==='done').length,qState.queue.length][i];});
+  const h=document.getElementById('sb-hist'); if(h)h.innerHTML=[...s.hist].reverse().slice(0,8).map(e=>`<div class="sb-hist-row">${e.act}</div>`).join('');
 }
 function renderQManage(){
   const ml=document.getElementById('manage-list');if(!ml)return;
@@ -1370,16 +1366,12 @@ function renderQManage(){
   </div>`).join('');
   const al=document.getElementById('admin-list');if(!al)return;
   al.innerHTML=adminState.admins.map(a=>`<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg2);border-radius:var(--radius);margin-bottom:6px">
-    <i class="ti ti-shield-check" style="color:var(--warn-text)"></i>
-    <span style="flex:1;font-size:14px;font-weight:500">${a.name}${a.isSuper?` <span class="pill" style="background:var(--warn-bg);color:var(--warn-text)">Super</span>`:''}</span>
-    <div style="display:flex;gap:5px">
-      ${isAdmin()?`<button class="btn btn-sm" onclick="showChangePinModal('${a.name}')"><i class="ti ti-key"></i></button>`:''}
-      ${isSuperAdmin()&&a.name!=='Admin'?`<button class="btn btn-d btn-sm" onclick="removeAdmin('${a.name}')"><i class="ti ti-x"></i></button>`:''}
-    </div>
+    <i class="ti ti-shield-check" style="color:var(--warn-text)"></i> <span style="flex:1;font-size:14px;font-weight:500">${a.name}${a.isSuper?` <span class="pill" style="background:var(--warn-bg);color:var(--warn-text)">Super</span>`:''}</span>
+    <div style="display:flex;gap:5px"> ${isAdmin()?`<button class="btn btn-sm" onclick="showChangePinModal('${a.name}')"><i class="ti ti-key"></i></button>`:''} ${isSuperAdmin()&&a.name!=='Admin'?`<button class="btn btn-d btn-sm" onclick="removeAdmin('${a.name}')"><i class="ti ti-x"></i></button>`:''} </div>
   </div>`).join('');
 }
 
-/* ══ LEAGUE MODE 大联盟数据模型 ══ */
+/* ══ LEAGUE MODE 联赛引擎 ══ */
 const MATCH_TYPES=['MD','MXD','MD','WD','MD','MXD'];
 let lState={players:[],teams:[],matches:[],draftOrder:[],draftTurn:0,draftDone:false,nextPid:1,nextTid:1,nextMid:1,selMatch:null};
 let editingMatchId=null;
@@ -1388,11 +1380,7 @@ function loadL(){try{const d=localStorage.getItem('pb_league');if(d){lState=JSON
 function tn(id){const t=lState.teams.find(t=>t.id===id);return t?t.name:'?';}
 function tp(tid){return lState.players.filter(p=>p.teamId===tid);}
 let lCurrentTab='setup';
-function showLTab(tab){
-  lCurrentTab=tab;
-  ['setup','draft','schedule','scores','standings'].forEach(id=>{document.getElementById('ltab-'+id).classList.toggle('active',id===tab);document.getElementById('lsec-'+id).classList.toggle('active',id===tab);});
-  renderLeague();
-}
+function showLTab(tab){ lCurrentTab=tab; ['setup','draft','schedule','scores','standings'].forEach(id=>{document.getElementById('ltab-'+id).classList.toggle('active',id===tab);document.getElementById('lsec-'+id).classList.toggle('active',id===tab);}); renderLeague(); }
 function addPlayer(){const name=document.getElementById('p-name').value.trim();if(!name)return;lState.players.push({id:lState.nextPid++,name,gender:document.getElementById('p-gender').value,teamId:null,wins:0,losses:0,sets_w:0,sets_l:0});document.getElementById('p-name').value='';saveL();renderLeague();}
 function removePlayer(id){lState.players=lState.players.filter(p=>p.id!==id);saveL();renderLeague();}
 function addTeam(){const name=document.getElementById('t-name').value.trim();if(!name)return;lState.teams.push({id:lState.nextTid++,name,players:[],wins:0,losses:0,sets_w:0,sets_l:0,points:0});document.getElementById('t-name').value='';saveL();renderLeague();}
@@ -1406,11 +1394,8 @@ function goToDraft(){
   lState.draftTurn=0;lState.draftDone=false;saveL();showLTab('draft');
 }
 function draftPick(pid){
-  if(!isAdmin()){toast(T('adminRequired'));return;}
-  if(lState.draftDone||lState.draftTurn>=lState.draftOrder.length)return;
-  const p=lState.players.find(p=>p.id===pid);if(!p||p.teamId)return;
-  const tid=lState.draftOrder[lState.draftTurn];const team=lState.teams.find(t=>t.id===tid);
-  const tpp=lState.players.filter(q=>q.teamId===tid);
+  if(!isAdmin()){toast(T('adminRequired'));return;} if(lState.draftDone||lState.draftTurn>=lState.draftOrder.length)return;
+  const p=lState.players.find(p=>p.id===pid);if(!p||p.teamId)return; const tid=lState.draftOrder[lState.draftTurn];const team=lState.teams.find(t=>t.id===tid);const tpp=lState.players.filter(q=>q.teamId===tid);
   if(p.gender==='M'&&tpp.filter(q=>q.gender==='M').length>=4){toast(T('toastLMaleFull'));return;}
   if(p.gender==='F'&&tpp.filter(q=>q.gender==='F').length>=2){toast(T('toastLFemaleFull'));return;}
   p.teamId=tid;team.players.push(pid);lState.draftTurn++;
@@ -1419,16 +1404,13 @@ function draftPick(pid){
 }
 function finalizeDraft(){
   const ok=lState.teams.every(t=>{const tpp=lState.players.filter(p=>p.teamId===t.id);return tpp.filter(p=>p.gender==='M').length>=4&&tpp.filter(p=>p.gender==='F').length>=2;});
-  if(!ok){toast(T('toastLRosterFull'));return;}
-  lState.draftDone=true;lState.matches=[];const ids=lState.teams.map(t=>t.id);let round=1;
+  if(!ok){toast(T('toastLRosterFull'));return;} lState.draftDone=true;lState.matches=[];const ids=lState.teams.map(t=>t.id);let round=1;
   for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)lState.matches.push({id:lState.nextMid++,round:round++,teamA:ids[i],teamB:ids[j],scores:[null,null,null,null,null,null],lineups:null,done:false,walkover:false});
   saveL();toast(T('toastLSchedule'));showLTab('schedule');
 }
 function openLineupModal(mid){
-  if(!isAdmin()){toast(T('adminRequired'));return;}
-  editingMatchId=mid;const m=lState.matches.find(m=>m.id===mid);if(!m)return;
-  const ml=T('matchLabels');const pA=tp(m.teamA);const pB=tp(m.teamB);
-  const lineup=m.lineups||MATCH_TYPES.map(()=>({a:[],b:[]}));
+  if(!isAdmin()){toast(T('adminRequired'));return;} editingMatchId=mid;const m=lState.matches.find(m=>m.id===mid);if(!m)return;
+  const ml=T('matchLabels');const pA=tp(m.teamA);const pB=tp(m.teamB);const lineup=m.lineups||MATCH_TYPES.map(()=>({a:[],b:[]}));
   document.getElementById('lineup-form').innerHTML=MATCH_TYPES.map((type,i)=>`
     <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid var(--border)">
       <div style="font-size:13px;font-weight:700;margin-bottom:7px;color:var(--info-text)">${ml[i]}</div>
@@ -1439,32 +1421,22 @@ function openLineupModal(mid){
         <div>${pB.map(p=>`<button class="player-sel-btn ${(lineup[i]?.b||[]).includes(p.id)?'selected':''}" id="lb-b-${i}-${p.id}" onclick="toggleLU(${i},'b',${p.id})">${p.name}</button>`).join('')}</div>
       </div>
     </div>`).join('');
-  window._EL=lineup.map(l=>({a:[...(l?.a||[])],b:[...(l?.b||[])]}));
-  openModal('modal-lineup');
+  window._EL=lineup.map(l=>({a:[...(l?.a||[])],b:[...(l?.b||[])]})); openModal('modal-lineup');
 }
-function toggleLU(si,side,pid){
-  if(!window._EL)return;const arr=window._EL[si][side];const i=arr.indexOf(pid);
-  if(i>=0)arr.splice(i,1);else arr.push(pid);
-  const btn=document.getElementById(`lb-${side}-${si}-${pid}`);if(btn)btn.classList.toggle('selected',arr.includes(pid));
-}
+function toggleLU(si,side,pid){ if(!window._EL)return;const arr=window._EL[si][side];const i=arr.indexOf(pid); if(i>=0)arr.splice(i,1);else arr.push(pid); const btn=document.getElementById(`lb-${side}-${si}-${pid}`);if(btn)btn.classList.toggle('selected',arr.includes(pid)); }
 function saveLineup(){const m=lState.matches.find(m=>m.id===editingMatchId);if(!m)return;m.lineups=window._EL;saveL();closeModal('modal-lineup');toast(lang==='zh'?'阵容已保存':'Lineup saved');renderLeague();}
 function selectMatch(id){lState.selMatch=id;saveL();renderLScores();}
 function saveScores(mid){
-  const m=lState.matches.find(m=>m.id===mid);if(!m)return;
-  const scores=[];for(let i=0;i<6;i++){const a=parseInt(document.getElementById('sc-'+mid+'-'+i+'-a').value)||0;const b=parseInt(document.getElementById('sc-'+mid+'-'+i+'-b').value)||0;scores.push([a,b]);}
+  const m=lState.matches.find(m=>m.id===mid);if(!m)return; const scores=[];for(let i=0;i<6;i++){const a=parseInt(document.getElementById('sc-'+mid+'-'+i+'-a').value)||0;const b=parseInt(document.getElementById('sc-'+mid+'-'+i+'-b').value)||0;scores.push([a,b]);}
   m.scores=scores;m.done=true;m.walkover=false;calcStandings();saveL();toast(T('toastLSaved'));renderLeague();
 }
 function setWO(mid){const m=lState.matches.find(m=>m.id===mid);if(!m)return;m.scores=[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]];m.done=true;m.walkover=true;calcStandings();saveL();toast(T('toastLWO'));renderLeague();}
 function undoResult(mid){const m=lState.matches.find(m=>m.id===mid);if(!m)return;m.scores=[null,null,null,null,null,null];m.done=false;m.walkover=false;calcStandings();saveL();toast(T('toastLUndo'));renderLeague();}
 function calcStandings(){
-  lState.teams.forEach(t=>{t.wins=0;t.losses=0;t.sets_w=0;t.sets_l=0;t.points=0;});
-  lState.players.forEach(p=>{p.wins=0;p.losses=0;p.sets_w=0;p.sets_l=0;});
+  lState.teams.forEach(t=>{t.wins=0;t.losses=0;t.sets_w=0;t.sets_l=0;t.points=0;}); lState.players.forEach(p=>{p.wins=0;p.losses=0;p.sets_w=0;p.sets_l=0;});
   lState.matches.filter(m=>m.done&&!m.walkover).forEach(m=>{
-    const ta=lState.teams.find(t=>t.id===m.teamA),tb=lState.teams.find(t=>t.id===m.teamB);if(!ta||!tb)return;
-    let sa=0,sb=0;
-    m.scores.forEach((s,i)=>{
-      if(!s)return;const aW=s[0]>s[1],bW=s[1]>s[0];
-      if(aW){sa++;ta.sets_w++;tb.sets_l++;}else if(bW){sb++;tb.sets_w++;ta.sets_l++;}
+    const ta=lState.teams.find(t=>t.id===m.teamA),tb=lState.teams.find(t=>t.id===m.teamB);if(!ta||!tb)return; let sa=0,sb=0;
+    m.scores.forEach((s,i)=>{ if(!s)return;const aW=s[0]>s[1],bW=s[1]>s[0]; if(aW){sa++;ta.sets_w++;tb.sets_l++;}else if(bW){sb++;tb.sets_w++;ta.sets_l++;}
       if(m.lineups&&m.lineups[i]){
         (m.lineups[i].a||[]).forEach(pid=>{const p=lState.players.find(p=>p.id===pid);if(p){if(aW){p.wins++;p.sets_w++;}else if(bW){p.losses++;p.sets_l++;}}});
         (m.lineups[i].b||[]).forEach(pid=>{const p=lState.players.find(p=>p.id===pid);if(p){if(bW){p.wins++;p.sets_w++;}else if(aW){p.losses++;p.sets_l++;}}});
@@ -1474,123 +1446,48 @@ function calcStandings(){
   });
 }
 function exportSchedule(){
-  if(!lState.matches.length)return;const ml=T('matchLabels');
-  let txt=T('exportTitle')+'\n'+'─'.repeat(28)+'\n\n';
+  if(!lState.matches.length)return;const ml=T('matchLabels'); let txt=T('exportTitle')+'\n'+'─'.repeat(28)+'\n\n';
   lState.matches.forEach(m=>{txt+=T('exportRound',m.round,tn(m.teamA),tn(m.teamB))+'\n';ml.forEach((lb,i)=>{const s=m.scores[i];txt+=`  ${lb}: ${s?s[0]+':'+s[1]:T('exportPending')}\n`;});txt+='\n';});
-  const sorted=[...lState.teams].sort((a,b)=>b.points-a.points);
-  txt+=T('exportStandings')+'\n';sorted.forEach((t,i)=>{txt+=`${i+1}. ${t.name}  ${T('exportWins',t.wins,t.losses,t.points)}\n`;});
+  const sorted=[...lState.teams].sort((a,b)=>b.points-a.points); txt+=T('exportStandings')+'\n';sorted.forEach((t,i)=>{txt+=`${i+1}. ${t.name}  ${T('exportWins',t.wins,t.losses,t.points)}\n`;});
   const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=T('exportFileName')+'.txt';a.click();
 }
 function renderLSetup(){
-  const pp=document.getElementById('player-pool');if(!pp)return;
-  const mc=lState.players.filter(p=>p.gender==='M').length,fc=lState.players.filter(p=>p.gender==='F').length;
-  pp.innerHTML=lState.players.length===0?`<div class="empty">${T('emptyPlayers')}</div>`
-    :`<div style="font-size:12px;color:var(--text2);margin-bottom:7px">${T('mCount',mc,fc)}</div>`
-    +lState.players.map(p=>`<div style="display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg2);border-radius:var(--radius);margin-bottom:5px">
-      <span class="pill ${p.gender==='M'?'pm':'pf'}">${p.gender==='M'?T('optMale'):T('optFemale')}</span>
-      <span style="flex:1;font-size:14px;font-weight:500">${p.name}</span>
-      ${isAdmin()?`<button class="btn btn-d btn-sm" onclick="removePlayer(${p.id})"><i class="ti ti-x"></i></button>`:''}
-    </div>`).join('');
+  const pp=document.getElementById('player-pool');if(!pp)return; const mc=lState.players.filter(p=>p.gender==='M').length,fc=lState.players.filter(p=>p.gender==='F').length;
+  pp.innerHTML=lState.players.length===0?`<div class="empty">${T('emptyPlayers')}</div>` :`<div style="font-size:12px;color:var(--text2);margin-bottom:7px">${T('mCount',mc,fc)}</div>` +lState.players.map(p=>`<div style="display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg2);border-radius:var(--radius);margin-bottom:5px"><span class="pill ${p.gender==='M'?'pm':'pf'}">${p.gender==='M'?T('optMale'):T('optFemale')}</span><span style="flex:1;font-size:14px;font-weight:500">${p.name}</span>${isAdmin()?`<button class="btn btn-d btn-sm" onclick="removePlayer(${p.id})"><i class="ti ti-x"></i></button>`:''}</div>`).join('');
   const tl=document.getElementById('teams-list');if(!tl)return;
-  tl.innerHTML=lState.teams.length===0?`<div class="empty">${T('emptyTeams')}</div>`
-    :lState.teams.map(t=>`<div style="display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg2);border-radius:var(--radius);margin-bottom:5px">
-      <i class="ti ti-shield" style="color:var(--text2)"></i><span style="flex:1;font-size:14px;font-weight:500">${t.name}</span>
-      ${isAdmin()?`<button class="btn btn-d btn-sm" onclick="removeTeam(${t.id})"><i class="ti ti-x"></i></button>`:''}
-    </div>`).join('');
+  tl.innerHTML=lState.teams.length===0?`<div class="empty">${T('emptyTeams')}</div>` :lState.teams.map(t=>`<div style="display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg2);border-radius:var(--radius);margin-bottom:5px"><i class="ti ti-shield" style="color:var(--text2)"></i><span style="flex:1;font-size:14px;font-weight:500">${t.name}</span>${isAdmin()?`<button class="btn btn-d btn-sm" onclick="removeTeam(${t.id})"><i class="ti ti-x"></i></button>`:''}</div>`).join('');
 }
 function renderLDraft(){
   const di=document.getElementById('draft-info'),dt=document.getElementById('draft-teams'),dp=document.getElementById('draft-pool');if(!di||!dt||!dp)return;
-  if(lState.draftTurn<lState.draftOrder.length){const cur=lState.teams.find(t=>t.id===lState.draftOrder[lState.draftTurn]);di.textContent=T('draftPicking',cur?cur.name:'',Math.floor(lState.draftTurn/lState.teams.length)+1);}
-  else di.textContent=T('draftComplete');
-  dt.innerHTML=lState.teams.map(tm=>{
-    const tpp=lState.players.filter(p=>p.teamId===tm.id);const isActive=lState.draftTurn<lState.draftOrder.length&&lState.draftOrder[lState.draftTurn]===tm.id;
-    const males=tpp.filter(p=>p.gender==='M'),females=tpp.filter(p=>p.gender==='F');
-    return`<div class="draft-card ${isActive?'active-pick':''}">
-      <div style="font-size:14px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px">
-        <i class="ti ti-shield"></i>${tm.name}<span style="font-size:11px;color:var(--text2);font-weight:400">${T('mF',males.length,females.length)}</span>
-        ${isActive?`<span class="pill" style="background:var(--info-bg);color:var(--info-text);margin-left:auto">${T('picking')}</span>`:''}
-      </div>
-      <div>${males.map(p=>`<span class="pill pm" style="margin:2px">${p.name}</span>`).join('')}${females.map(p=>`<span class="pill pf" style="margin:2px">${p.name}</span>`).join('')}${!tpp.length?`<span style="color:var(--text3);font-size:12px">${T('waitingDraft')}</span>`:''}</div>
-    </div>`;
-  }).join('');
-  const avail=lState.players.filter(p=>!p.teamId);
-  dp.innerHTML=avail.length===0?`<div style="color:var(--text2);font-size:13px">${T('allAssigned')}</div>`
-    :avail.map(p=>`<button class="pick-btn" onclick="draftPick(${p.id})"><span class="pill ${p.gender==='M'?'pm':'pf'}">${p.gender==='M'?T('optMale'):T('optFemale')}</span>${p.name}</button>`).join('');
+  if(lState.draftTurn<lState.draftOrder.length){const cur=lState.teams.find(t=>t.id===lState.draftOrder[lState.draftTurn]);di.textContent=T('draftPicking',cur?cur.name:'',Math.floor(lState.draftTurn/lState.teams.length)+1);} else di.textContent=T('draftComplete');
+  dt.innerHTML=lState.teams.map(tm=>{ const tpp=lState.players.filter(p=>p.teamId===tm.id);const isActive=lState.draftTurn<lState.draftOrder.length&&lState.draftOrder[lState.draftTurn]===tm.id;const males=tpp.filter(p=>p.gender==='M'),females=tpp.filter(p=>p.gender==='F');
+    return`<div class="draft-card ${isActive?'active-pick':''}"><div style="font-size:14px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px"><i class="ti ti-shield"></i>${tm.name}<span style="font-size:11px;color:var(--text2);font-weight:400">${T('mF',males.length,females.length)}</span>${isActive?`<span class="pill" style="background:var(--info-bg);color:var(--info-text);margin-left:auto">${T('picking')}</span>`:''}</div><div>${males.map(p=>`<span class="pill pm" style="margin:2px">${p.name}</span>`).join('')}${females.map(p=>`<span class="pill pf" style="margin:2px">${p.name}</span>`).join('')}${!tpp.length?`<span style="color:var(--text3);font-size:12px">${T('waitingDraft')}</span>`:''}</div></div>`; }).join('');
+  const avail=lState.players.filter(p=>!p.teamId); dp.innerHTML=avail.length===0?`<div style="color:var(--text2);font-size:13px">${T('allAssigned')}</div>` :avail.map(p=>`<button class="pick-btn" onclick="draftPick(${p.id})"><span class="pill ${p.gender==='M'?'pm':'pf'}">${p.gender==='M'?T('optMale'):T('optFemale')}</span>${p.name}</button>`).join('');
 }
 function renderLSchedule(){
-  const el=document.getElementById('schedule-list');if(!el)return;
-  if(!lState.matches.length){el.innerHTML=`<div class="empty">${T('emptySchedule')}</div>`;return;}
-  el.innerHTML=lState.matches.map(m=>`<div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:11px 13px;margin-bottom:10px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div style="font-size:14px;font-weight:600">${T('roundFull',m.round,tn(m.teamA),tn(m.teamB))}</div>
-      <div style="display:flex;gap:5px;align-items:center">
-        ${m.done?`<span class="pill ${m.walkover?'pwo':'pdone'}">${m.walkover?'WO':T('done')}</span>`:`<span class="pill ppend">${T('pending')}</span>`}
-        <button class="btn btn-sm ${m.lineups?'btn-p':''}" onclick="openLineupModal(${m.id})" style="font-size:11px;padding:3px 8px">${m.lineups?T('lineupSet'):T('setLineupBtn')}</button>
-      </div>
-    </div>
-    ${MATCH_TYPES.map((type,i)=>{const s=m.scores[i];
-      const la=(m.lineups&&m.lineups[i])?(m.lineups[i].a||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'—';
-      const lb=(m.lineups&&m.lineups[i])?(m.lineups[i].b||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'—';
-      return`<div style="padding:4px 0;border-bottom:0.5px solid var(--border)">
-        <div style="font-size:11px;font-weight:700;color:var(--text2)">${type}</div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="flex:1;color:var(--text2)">${la}</span><span style="font-weight:700;min-width:34px;text-align:center">${s?s[0]+':'+s[1]:'—'}</span><span style="flex:1;text-align:right;color:var(--text2)">${lb}</span></div>
-      </div>`;}).join('')}
-  </div>`).join('');
+  const el=document.getElementById('schedule-list');if(!el)return; if(!lState.matches.length){el.innerHTML=`<div class="empty">${T('emptySchedule')}</div>`;return;}
+  el.innerHTML=lState.matches.map(m=>`<div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:11px 13px;margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-size:14px;font-weight:600">${T('roundFull',m.round,tn(m.teamA),tn(m.teamB))}</div><div style="display:flex;gap:5px;align-items:center">${m.done?`<span class="pill ${m.walkover?'pwo':'pdone'}">${m.walkover?'WO':T('done')}</span>`:`<span class="pill ppend">${T('pending')}</span>`}<button class="btn btn-sm ${m.lineups?'btn-p':''}" onclick="openLineupModal(${m.id})" style="font-size:11px;padding:3px 8px">${m.lineups?T('lineupSet'):T('setLineupBtn')}</button></div></div>
+    ${MATCH_TYPES.map((type,i)=>{const s=m.scores[i];const la=(m.lineups&&m.lineups[i])?(m.lineups[i].a||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'—';const lb=(m.lineups&&m.lineups[i])?(m.lineups[i].b||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'—';
+      return`<div style="padding:4px 0;border-bottom:0.5px solid var(--border)"><div style="font-size:11px;font-weight:700;color:var(--text2)">${type}</div><div style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="flex:1;color:var(--text2)">${la}</span><span style="font-weight:700;min-width:34px;text-align:center">${s?s[0]+':'+s[1]:'—'}</span><span style="flex:1;text-align:right;color:var(--text2)">${lb}</span></div></div>`;}).join('')}</div>`).join('');
 }
 function renderLScores(){
-  const picker=document.getElementById('match-picker'),form=document.getElementById('score-form');if(!picker||!form)return;
-  if(!lState.matches.length){picker.innerHTML=`<div class="empty">${T('emptyScores')}</div>`;form.innerHTML='';return;}
+  const picker=document.getElementById('match-picker'),form=document.getElementById('score-form');if(!picker||!form)return; if(!lState.matches.length){picker.innerHTML=`<div class="empty">${T('emptyScores')}</div>`;form.innerHTML='';return;}
   picker.innerHTML=`<div style="display:flex;gap:5px;flex-wrap:wrap">${lState.matches.map(m=>{const active=lState.selMatch===m.id;return`<button class="btn btn-sm ${active?'btn-p':''}" onclick="selectMatch(${m.id})" style="${m.done?'opacity:.6':''}">${T('roundLabel',m.round)} ${tn(m.teamA)} vs ${tn(m.teamB)}${m.done?' ✓':''}</button>`;}).join('')}</div>`;
-  if(!lState.selMatch&&lState.matches.length)lState.selMatch=lState.matches.find(m=>!m.done)?.id||lState.matches[0].id;
-  const m=lState.matches.find(m=>m.id===lState.selMatch);if(!m){form.innerHTML='';return;}
-  const ml=T('matchLabels');
-  form.innerHTML=`<div class="card" style="margin-top:10px">
-    <div style="font-size:15px;font-weight:600;margin-bottom:8px">${T('scoreTitle',m.round,tn(m.teamA),tn(m.teamB))}</div>
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;margin-bottom:6px;font-size:11px;color:var(--text2);text-align:center"><span style="text-align:left">${tn(m.teamA)}</span><span></span><span style="text-align:right">${tn(m.teamB)}</span></div>
-    ${MATCH_TYPES.map((type,i)=>{const s=m.scores[i];
-      const la=(m.lineups&&m.lineups[i])?(m.lineups[i].a||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'';
-      const lb=(m.lineups&&m.lineups[i])?(m.lineups[i].b||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'';
-      return`<div class="match-row">
-        <span style="font-size:11px;font-weight:700;color:var(--text2)">${type}<br/><span style="font-weight:400;font-size:10px;color:var(--text3)">${la&&lb?la+'/'+lb:ml[i].split('(')[0].trim()}</span></span>
-        <div style="flex:1"></div>
-        <div class="mscore"><input class="score-inp" type="number" min="0" max="99" id="sc-${m.id}-${i}-a" value="${s?s[0]:''}" placeholder="0" ${!isAdmin()?'disabled':''}/><span style="color:var(--text2);font-weight:600">:</span><input class="score-inp" type="number" min="0" max="99" id="sc-${m.id}-${i}-b" value="${s?s[1]:''}" placeholder="0" ${!isAdmin()?'disabled':''}/></div>
-        <div style="flex:1"></div>
-      </div>`;}).join('')}
-    ${isAdmin()?`<div style="display:flex;gap:7px;margin-top:10px">
-      <button class="btn btn-p" style="flex:1;justify-content:center;padding:11px" onclick="saveScores(${m.id})"><i class="ti ti-check"></i> ${T('saveBtn')}</button>
-      <button class="btn" style="padding:11px" onclick="setWO(${m.id})">WO</button>
-      ${m.done?`<button class="btn btn-d" style="padding:11px" onclick="undoResult(${m.id})"><i class="ti ti-rotate-left"></i></button>`:''}
-    </div>`:`<div style="font-size:12px;color:var(--text2);margin-top:8px;text-align:center">${T('adminRequired')}</div>`}
-  </div>`;
+  if(!lState.selMatch&&lState.matches.length)lState.selMatch=lState.matches.find(m=>!m.done)?.id||lState.matches[0].id; const m=lState.matches.find(m=>m.id===lState.selMatch);if(!m){form.innerHTML='';return;} const ml=T('matchLabels');
+  form.innerHTML=`<div class="card" style="margin-top:10px"><div style="font-size:15px;font-weight:600;margin-bottom:8px">${T('scoreTitle',m.round,tn(m.teamA),tn(m.teamB))}</div><div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;margin-bottom:6px;font-size:11px;color:var(--text2);text-align:center"><span style="text-align:left">${tn(m.teamA)}</span><span></span><span style="text-align:right">${tn(m.teamB)}</span></div>
+    ${MATCH_TYPES.map((type,i)=>{const s=m.scores[i];const la=(m.lineups&&m.lineups[i])?(m.lineups[i].a||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'';const lb=(m.lineups&&m.lineups[i])?(m.lineups[i].b||[]).map(pid=>{const p=lState.players.find(p=>p.id===pid);return p?p.name:'?';}).join('/'):'';
+      return`<div class="match-row"><span style="font-size:11px;font-weight:700;color:var(--text2)">${type}<br/><span style="font-weight:400;font-size:10px;color:var(--text3)">${la&&lb?la+'/'+lb:ml[i].split('(')[0].trim()}</span></span><div style="flex:1"></div><div class="mscore"><input class="score-inp" type="number" min="0" max="99" id="sc-${m.id}-${i}-a" value="${s?s[0]:''}" placeholder="0" ${!isAdmin()?'disabled':''}/><span style="color:var(--text2);font-weight:600">:</span><input class="score-inp" type="number" min="0" max="99" id="sc-${m.id}-${i}-b" value="${s?s[1]:''}" placeholder="0" ${!isAdmin()?'disabled':''}/><div style="flex:1"></div></div></div>`;}).join('')}
+    ${isAdmin()?`<div style="display:flex;gap:7px;margin-top:10px"><button class="btn btn-p" style="flex:1;justify-content:center;padding:11px" onclick="saveScores(${m.id})"><i class="ti ti-check"></i> ${T('saveBtn')}</button><button class="btn" style="padding:11px" onclick="setWO(${m.id})">WO</button>${m.done?`<button class="btn btn-d" style="padding:11px" onclick="undoResult(${m.id})"><i class="ti ti-rotate-left"></i></button>`:''}</div>`:`<div style="font-size:12px;color:var(--text2);margin-top:8px;text-align:center">${T('adminRequired')}</div>`}</div>`;
 }
 function renderLStandings(){
-  const body=document.getElementById('standings-body');if(!body)return;
-  if(!lState.teams.length){body.innerHTML=`<tr><td colspan="7" class="empty">${T('emptyStandings')}</td></tr>`;return;}
-  const sorted=[...lState.teams].sort((a,b)=>b.points-a.points||(b.wins-a.wins)||(b.sets_w-b.sets_l)-(a.sets_w-a.sets_l));
-  const rc=['rank1','rank2','rank3'];
-  body.innerHTML=sorted.map((t,i)=>`<tr>
-    <td><span class="pill ${rc[i]||''}" style="${i>2?'background:transparent;color:var(--text2)':''}">${i+1}</span></td>
-    <td style="font-weight:500">${t.name}</td>
-    <td style="text-align:center;color:var(--text2)">${t.wins+t.losses}</td>
-    <td style="text-align:center;color:var(--success-text)">${t.wins}</td>
-    <td style="text-align:center;color:var(--danger-text)">${t.losses}</td>
-    <td style="text-align:center;font-size:12px;color:var(--text2)">${t.sets_w}:${t.sets_l}</td>
-    <td style="text-align:center;font-size:16px;font-weight:700">${t.points}</td>
-  </tr>`).join('');
-  const ko=document.getElementById('knockout-box');
-  const allDone=lState.matches.length>0&&lState.matches.every(m=>m.done);
+  const body=document.getElementById('standings-body');if(!body)return; if(!lState.teams.length){body.innerHTML=`<tr><td colspan="7" class="empty">${T('emptyStandings')}</td></tr>`;return;}
+  const sorted=[...lState.teams].sort((a,b)=>b.points-a.points||(b.wins-a.wins)||(b.sets_w-b.sets_l)-(a.sets_w-a.sets_l));const rc=['rank1','rank2','rank3'];
+  body.innerHTML=sorted.map((t,i)=>`<tr><td><span class="pill ${rc[i]||''}" style="${i>2?'background:transparent;color:var(--text2)':''}">${i+1}</span></td><td style="font-weight:500">${t.name}</td><td style="text-align:center;color:var(--text2)">${t.wins+t.losses}</td><td style="text-align:center;color:var(--success-text)">${t.wins}</td><td style="text-align:center;color:var(--danger-text)">${t.losses}</td><td style="text-align:center;font-size:12px;color:var(--text2)">${t.sets_w}:${t.sets_l}</td><td style="text-align:center;font-size:16px;font-weight:700">${t.points}</td></tr>`).join('');
+  const ko=document.getElementById('knockout-box');const allDone=lState.matches.length>0&&lState.matches.every(m=>m.done);
   if(ko){if(allDone&&sorted.length>=4){ko.innerHTML=`<div class="card"><div style="font-size:15px;font-weight:600;margin-bottom:8px"><i class="ti ti-tournament" style="margin-right:5px"></i>${T('knockout')}</div><div style="font-size:12px;color:var(--text2);margin-bottom:10px">${T('knockoutSub')}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${[[T('sfA'),0,3],[T('sfB'),1,2]].map(([lb,i,j])=>`<div style="background:var(--bg2);border-radius:var(--radius);padding:10px;text-align:center"><div style="font-size:11px;color:var(--text2);margin-bottom:4px">${lb}</div><div style="font-size:14px;font-weight:600">${sorted[i]?.name||'?'}</div><div style="font-size:12px;color:var(--text2);margin:3px 0">vs</div><div style="font-size:14px;font-weight:600">${sorted[j]?.name||'?'}</div></div>`).join('')}</div></div>`;}else ko.innerHTML='';}
   const psb=document.getElementById('player-stats-box');
-  if(psb){
-    const wt=lState.players.filter(p=>p.teamId);
-    psb.innerHTML=wt.length?`<div class="slabel" style="margin-top:14px">${T('playerStats')}</div>`+lState.teams.map(tm=>{
-      const tpp=lState.players.filter(p=>p.teamId===tm.id);if(!tpp.length)return '';
-      const s2=[...tpp].sort((a,b)=>{const ra=a.wins+a.losses>0?a.wins/(a.wins+a.losses):0;const rb=b.wins+b.losses>0?b.wins/(b.wins+b.losses):0;return rb-ra;});
-      return`<div class="card"><div style="font-size:14px;font-weight:600;margin-bottom:8px"><i class="ti ti-shield" style="margin-right:5px"></i>${tm.name}</div>
-        <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <thead><tr style="font-size:11px;color:var(--text2)"><th style="text-align:left;padding:4px 0;font-weight:600">${lang==='zh'?'球员':'Player'}</th><th style="text-align:center;padding:4px;font-weight:600">${lang==='zh'?'胜':'W'}</th><th style="text-align:center;padding:4px;font-weight:600">${lang==='zh'?'负':'L'}</th><th style="text-align:center;padding:4px;font-weight:600">${lang==='zh'?'胜率':'Win%'}</th></tr></thead>
-          <tbody>${s2.map(p=>{const tot=p.wins+p.losses;const rate=tot>0?Math.round(p.wins/tot*100):0;return`<tr style="border-top:0.5px solid var(--border)"><td style="padding:7px 0"><span class="pill ${p.gender==='M'?'pm':'pf'}" style="margin-right:5px">${p.gender==='M'?T('optMale'):T('optFemale')}</span>${p.name}</td><td style="text-align:center;color:var(--success-text);font-weight:600">${p.wins}</td><td style="text-align:center;color:var(--danger-text)">${p.losses}</td><td style="text-align:center;font-weight:700;color:${rate>=50?'var(--success-text)':'var(--danger-text)'}">${tot>0?rate+'%':'—'}</td></tr>`;}).join('')}</tbody>
-        </table></div>`;}).join(''):'';
+  if(psb){ const wt=lState.players.filter(p=>p.teamId); psb.innerHTML=wt.length?`<div class="slabel" style="margin-top:14px">${T('playerStats')}</div>`+lState.teams.map(tm=>{ const tpp=lState.players.filter(p=>p.teamId===tm.id);if(!tpp.length)return''; const s2=[...tpp].sort((a,b)=>{const ra=a.wins+a.losses>0?a.wins/(a.wins+a.losses):0;const rb=b.wins+b.losses>0?b.wins/(b.wins+b.losses):0;return rb-ra;});
+      return`<div class="card"><div style="font-size:14px;font-weight:600;margin-bottom:8px"><i class="ti ti-shield" style="margin-right:5px"></i>${tm.name}</div><table style="width:100%;border-collapse:collapse;font-size:13px><thead><tr style="font-size:11px;color:var(--text2)"><th style="text-align:left;padding:4px 0;font-weight:600">${lang==='zh'?'球员':'Player'}</th><th style="text-align:center;padding:4px;font-weight:600">${lang==='zh'?'胜':'W'}</th><th style="text-align:center;padding:4px;font-weight:600">${lang==='zh'?'负':'L'}</th><th style="text-align:center;padding:4px;font-weight:600">${lang==='zh'?'胜率':'Win%'}</th></tr></thead><tbody>${s2.map(p=>{const tot=p.wins+p.losses;const rate=tot>0?Math.round(p.wins/tot*100):0;return`<tr style="border-top:0.5px solid var(--border)"><td style="padding:7px 0"><span class="pill ${p.gender==='M'?'pm':'pf'}" style="margin-right:5px">${p.gender==='M'?T('optMale'):T('optFemale')}</span>${p.name}</td><td style="text-align:center;color:var(--success-text);font-weight:600">${p.wins}</td><td style="text-align:center;color:var(--danger-text)">${p.losses}</td><td style="text-align:center;font-weight:700;color:${rate>=50?'var(--success-text)':'var(--danger-text)'}">${tot>0?rate+'%':'—'}</td></tr>`;}).join('')}</tbody></table></div>`;}).join(''):'';
   }
 }
 function updateLStats(){['l-st-teams','l-st-players','l-st-done','l-st-pend'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[lState.teams.length,lState.players.length,lState.matches.filter(m=>m.done).length,lState.matches.filter(m=>!m.done).length][i];});}
@@ -1599,17 +1496,16 @@ function renderLeague(){renderLSetup();renderLDraft();renderLSchedule();renderLS
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);}
 function renderAll(){if(currentMode==='queue')renderQueue();else renderLeague();}
 
-/* ══ 系统引导生命周期启动 ══ */
+/* ══ 系统生命周期挂载启动 ══ */
 loadAdmin();
-loadQ(); // 异步从云端抓取初始值
+loadQ(); 
 loadL();
 loadSG();
 calcStandings();
 applyLang();
 updateAdminUI();
-initRealtimeSync(); // 🔥 正式接入 Supabase 实时广播网线
+initRealtimeSync(); 
 
-// 捕获外部扫码直接落点
 if(window.location.search.includes('join=1')){switchMode('queue');showQTab('qr');}
 </script>
 </body>
